@@ -1,0 +1,451 @@
+# Cairn 主题 - 中文 UI 字符串
+# 用于 Hugo `{{ i18n "key" }}` 调用。defaultContentLanguage = "zh" 时启用。
+
+# ===== 导航 =====
+[navHome]
+other = "首页"
+
+[navPosts]
+other = "文章"
+
+[navProjects]
+other = "项目"
+
+[navDouban]
+other = "豆瓣"
+
+[navArchives]
+other = "归档"
+
+[navAbout]
+other = "关于"
+
+[navLinks]
+other = "友链"
+
+[navResume]
+other = "简历"
+
+[navReading]
+other = "书架"
+
+[navWatching]
+other = "影库"
+
+[navTravel]
+other = "旅行"
+
+[navOpenMenu]
+other = "打开菜单"
+
+[navSearch]
+other = "搜索"
+
+[navSearchPlaceholder]
+other = "搜索…"
+
+[navToggleTheme]
+other = "切换主题"
+
+[navSubscribe]
+other = "订阅"
+
+[navClose]
+other = "关闭"
+
+[navLinksGroup]
+other = "链接"
+
+[footerThemedBy]
+other = "主题"
+
+[sidebarNav]
+other = "导航"
+
+[sidebarArchives]
+other = "归档"
+
+[sidebarCategories]
+other = "分类"
+
+[sidebarTags]
+other = "标签"
+
+[sidebarViewAll]
+other = "查看全部 →"
+
+[comments]
+other = "评论"
+
+# ===== 通用 =====
+[viewAll]
+other = "全部 →"
+
+[copy]
+other = "复制"
+
+[copyAll]
+other = "一键复制："
+
+[copied]
+other = "已复制 ✓"
+
+[loading]
+other = "加载中…"
+
+[empty]
+other = "EMPTY"
+
+[items]
+other = "ITEMS"
+
+[posts]
+other = "POSTS"
+
+[sites]
+other = "SITES"
+
+[books]
+other = "BOOKS"
+
+[movies]
+other = "MOVIES"
+
+# ===== 时间 / 字数 =====
+[readingTime]
+other = "{{ .Count }} MIN"
+
+[wordCount]
+other = "{{ .Count }} 字"
+
+# ===== 页面导航（上 / 下） =====
+[prevPost]
+other = "上一篇"
+
+[nextPost]
+other = "下一篇"
+
+[prevProject]
+other = "上一项目"
+
+[nextProject]
+other = "下一项目"
+
+[prevBook]
+other = "上一本"
+
+[nextBook]
+other = "下一本"
+
+[prevMovie]
+other = "上一部"
+
+[nextMovie]
+other = "下一部"
+
+[backHome]
+other = "回到首页"
+
+[paginationPrev]
+other = "上一页"
+
+[paginationNext]
+other = "下一页"
+
+[paginationPageOf]
+other = "第 {{ .Current }} / {{ .Total }} 页"
+
+# ===== 项目状态 =====
+[statusActive]
+other = "进行中"
+
+[statusMaintained]
+other = "维护中"
+
+[statusExperimental]
+other = "实验"
+
+[statusArchived]
+other = "已归档"
+
+[statusOther]
+other = "其他"
+
+# ===== 阅读状态 =====
+[statusAll]
+other = "全部"
+
+[statusReading]
+other = "在读"
+
+[statusFinished]
+other = "读完"
+
+[statusBookWishlist]
+other = "想读"
+
+[statusBookAbandoned]
+other = "弃读"
+
+# ===== 影视状态 =====
+[statusWatching]
+other = "在看"
+
+[statusWatched]
+other = "已看"
+
+[statusMovieWishlist]
+other = "想看"
+
+[statusMovieAbandoned]
+other = "弃剧"
+
+# ===== 元信息 =====
+[author]
+other = "作者"
+
+[director]
+other = "导演"
+
+[translator]
+other = "译者"
+
+[publisher]
+other = "出版"
+
+[isbn]
+other = "ISBN"
+
+[rating]
+other = "评分"
+
+[year]
+other = "年份"
+
+[cast]
+other = "主演"
+
+[genre]
+other = "类型"
+
+[duration]
+other = "时长"
+
+[durationMin]
+other = "{{ .Count }} 分钟"
+
+[doubanLink]
+other = "豆瓣"
+
+[visit]
+other = "访问"
+
+[repository]
+other = "仓库"
+
+[homepage]
+other = "主页"
+
+[demo]
+other = "Demo"
+
+[tagsLabel]
+other = "标签"
+
+[categoriesLabel]
+other = "分类"
+
+# ===== 首页 =====
+[homeIssue]
+other = "ISSUE — {{ .month }}"
+
+[homeRecentPosts]
+other = "最近文章"
+
+[heroTitleFallback]
+other = "你好，我是 {{ .name }}"
+
+[heroSubtitleFallback]
+other = "记录技术探索 · 项目 · 生活"
+
+# ===== 归档页 =====
+[archivesTitle]
+other = "归档"
+
+[archivesSubtitle]
+other = "按时间倒序排列 · 共 {{ .Count }} 篇"
+
+[archivesYearCount]
+other = "{{ .Count }} 篇"
+
+# ===== 项目页 =====
+[projectsCount]
+other = "{{ .Count }} 个项目"
+
+# ===== 阅读 / 影视页 =====
+[bookCount]
+other = "共 {{ .Count }} 本"
+
+[movieCount]
+other = "共 {{ .Count }} 部"
+
+# ===== 友链页 =====
+[linksLabel]
+other = "LINKS · 友链"
+
+[linksTitle]
+other = "友人们"
+
+[linksSubtitle]
+other = "互联网很大，能遇上同频的人很难得。这里是我去过、读过、并希望你也看看的一些地方。"
+
+[linksMyInfo]
+other = "MY INFO · 我的名片"
+
+[linksMyInfoHint]
+other = "申请时直接复制"
+
+[linksFieldName]
+other = "名称"
+
+[linksFieldUrl]
+other = "地址"
+
+[linksFieldDesc]
+other = "描述"
+
+[linksFieldAvatar]
+other = "头像"
+
+[linksCopyText]
+other = "纯文本"
+
+[linksCopyMd]
+other = "Markdown"
+
+[linksHowToApply]
+other = "HOW TO APPLY · 申请方式"
+
+[linksApplyStep1]
+other = "先把本站加进你的友链页（确保我能从你那访问回来）。"
+
+[linksApplyStep2Pre]
+other = "到 "
+
+[linksApplyAbout]
+other = "关于"
+
+[linksApplyStep2Post]
+other = " 页找到我的邮箱，发一封带"
+
+[linksApplyFields]
+other = "站名 / 地址 / 描述 / 头像"
+
+[linksApplyStep2Tail]
+other = "的邮件给我。"
+
+[linksApplyStep3]
+other = "或者直接在任意一篇文章下留言，附上以上信息也可以。"
+
+[linksApplyNote]
+other = "偏好原创、长期更新、内容向的个人站。商业站、采集站、长期不更新的站点恕不交换。"
+
+[linksEmpty]
+other = "还没有友链 —— 你可以是第一个 :)"
+
+# ===== 豆瓣聚合页 =====
+[doubanLabel]
+other = "DOUBAN · 豆瓣"
+
+[doubanTitle]
+other = "读过 · 看过"
+
+[doubanTabBooks]
+other = "书"
+
+[doubanTabMovies]
+other = "影"
+
+[doubanNoBooks]
+other = "还没有书。"
+
+[doubanNoMovies]
+other = "还没有影。"
+
+# ===== Feed 订阅页 =====
+[feedLabel]
+other = "RSS · ATOM"
+
+[feedTitlePrefix]
+other = "订阅 "
+
+[feedSubtitlePre]
+other = "把下面这个地址复制到 "
+
+[feedSubtitlePost]
+other = " 等阅读器里就能订阅，文章更新会自动推送给你。"
+
+[feedUrl]
+other = "FEED URL"
+
+[feedViewRaw]
+other = "查看原始 XML"
+
+[feedLatestPosts]
+other = "最新文章"
+
+# ===== 404 =====
+[notFoundTitle]
+other = "这页不存在"
+
+[notFoundSubtitle]
+other = "你寻找的内容可能已被移走，或者从未存在过。"
+
+# ===== 搜索 =====
+[searchTitle]
+other = "搜索"
+
+[searchSubtitlePre]
+other = "在所有文章 / 项目 / 书评 / 影评里找内容。也可以按 "
+
+[searchSubtitlePost]
+other = " 在任意页面打开。"
+
+[searchNoJS]
+other = "搜索功能需要 JavaScript。"
+
+[searchNoIndex]
+other = "搜索索引尚未生成。"
+
+[searchNoIndexHintPre]
+other = "本地运行 "
+
+[searchNoIndexHintPost]
+other = " 后即可使用。"
+
+[searchPlaceholder]
+other = "搜索文章…"
+
+[searchClear]
+other = "清除"
+
+[searchLoadMore]
+other = "加载更多"
+
+[searchLabel]
+other = "搜索"
+
+[searchFiltersLabel]
+other = "筛选"
+
+[searchZeroResults]
+other = "未找到「[SEARCH_TERM]」相关结果"
+
+[searchManyResults]
+other = "找到 [COUNT] 个「[SEARCH_TERM]」相关结果"
+
+[searchOneResult]
+other = "找到 1 个「[SEARCH_TERM]」相关结果"
+
+[searchSearching]
+other = "搜索「[SEARCH_TERM]」…"

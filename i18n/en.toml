@@ -1,0 +1,451 @@
+# Cairn theme - English UI strings
+# Used by Hugo's `{{ i18n "key" }}` calls. Active when defaultContentLanguage = "en".
+
+# ===== Navigation =====
+[navHome]
+other = "Home"
+
+[navPosts]
+other = "Posts"
+
+[navProjects]
+other = "Projects"
+
+[navDouban]
+other = "Shelves"
+
+[navArchives]
+other = "Archives"
+
+[navAbout]
+other = "About"
+
+[navLinks]
+other = "Friends"
+
+[navResume]
+other = "Resume"
+
+[navReading]
+other = "Reading"
+
+[navWatching]
+other = "Watching"
+
+[navTravel]
+other = "Travel"
+
+[navOpenMenu]
+other = "Open menu"
+
+[navSearch]
+other = "Search"
+
+[navSearchPlaceholder]
+other = "Search…"
+
+[navToggleTheme]
+other = "Toggle theme"
+
+[navSubscribe]
+other = "Subscribe"
+
+[navClose]
+other = "Close"
+
+[navLinksGroup]
+other = "Links"
+
+[footerThemedBy]
+other = "Theme"
+
+[sidebarNav]
+other = "Navigation"
+
+[sidebarArchives]
+other = "Archives"
+
+[sidebarCategories]
+other = "Categories"
+
+[sidebarTags]
+other = "Tags"
+
+[sidebarViewAll]
+other = "View all →"
+
+[comments]
+other = "Comments"
+
+# ===== Common =====
+[viewAll]
+other = "All →"
+
+[copy]
+other = "Copy"
+
+[copyAll]
+other = "Copy:"
+
+[copied]
+other = "Copied ✓"
+
+[loading]
+other = "Loading…"
+
+[empty]
+other = "EMPTY"
+
+[items]
+other = "ITEMS"
+
+[posts]
+other = "POSTS"
+
+[sites]
+other = "SITES"
+
+[books]
+other = "BOOKS"
+
+[movies]
+other = "MOVIES"
+
+# ===== Time / count =====
+[readingTime]
+other = "{{ .Count }} MIN"
+
+[wordCount]
+other = "{{ .Count }} words"
+
+# ===== Page navigation (prev / next) =====
+[prevPost]
+other = "Previous post"
+
+[nextPost]
+other = "Next post"
+
+[prevProject]
+other = "Previous project"
+
+[nextProject]
+other = "Next project"
+
+[prevBook]
+other = "Previous book"
+
+[nextBook]
+other = "Next book"
+
+[prevMovie]
+other = "Previous"
+
+[nextMovie]
+other = "Next"
+
+[backHome]
+other = "Back to home"
+
+[paginationPrev]
+other = "Prev"
+
+[paginationNext]
+other = "Next"
+
+[paginationPageOf]
+other = "Page {{ .Current }} / {{ .Total }}"
+
+# ===== Project status =====
+[statusActive]
+other = "Active"
+
+[statusMaintained]
+other = "Maintained"
+
+[statusExperimental]
+other = "Experimental"
+
+[statusArchived]
+other = "Archived"
+
+[statusOther]
+other = "Other"
+
+# ===== Reading status =====
+[statusAll]
+other = "All"
+
+[statusReading]
+other = "Reading"
+
+[statusFinished]
+other = "Finished"
+
+[statusBookWishlist]
+other = "Wishlist"
+
+[statusBookAbandoned]
+other = "Abandoned"
+
+# ===== Watching status =====
+[statusWatching]
+other = "Watching"
+
+[statusWatched]
+other = "Watched"
+
+[statusMovieWishlist]
+other = "Wishlist"
+
+[statusMovieAbandoned]
+other = "Abandoned"
+
+# ===== Meta =====
+[author]
+other = "Author"
+
+[director]
+other = "Director"
+
+[translator]
+other = "Translator"
+
+[publisher]
+other = "Publisher"
+
+[isbn]
+other = "ISBN"
+
+[rating]
+other = "Rating"
+
+[year]
+other = "Year"
+
+[cast]
+other = "Cast"
+
+[genre]
+other = "Genre"
+
+[duration]
+other = "Runtime"
+
+[durationMin]
+other = "{{ .Count }} min"
+
+[doubanLink]
+other = "Douban"
+
+[visit]
+other = "Visit"
+
+[repository]
+other = "Repository"
+
+[homepage]
+other = "Homepage"
+
+[demo]
+other = "Demo"
+
+[tagsLabel]
+other = "Tags"
+
+[categoriesLabel]
+other = "Categories"
+
+# ===== Home =====
+[homeIssue]
+other = "ISSUE — {{ .month }}"
+
+[homeRecentPosts]
+other = "Recent posts"
+
+[heroTitleFallback]
+other = "Hi, I'm {{ .name }}"
+
+[heroSubtitleFallback]
+other = "Notes on tech, projects, and life."
+
+# ===== Archives =====
+[archivesTitle]
+other = "Archives"
+
+[archivesSubtitle]
+other = "Reverse chronological · {{ .Count }} posts"
+
+[archivesYearCount]
+other = "{{ .Count }} posts"
+
+# ===== Projects =====
+[projectsCount]
+other = "{{ .Count }} projects"
+
+# ===== Reading / Watching =====
+[bookCount]
+other = "{{ .Count }} books"
+
+[movieCount]
+other = "{{ .Count }} titles"
+
+# ===== Friend links =====
+[linksLabel]
+other = "LINKS · Friends"
+
+[linksTitle]
+other = "Friends of the site"
+
+[linksSubtitle]
+other = "The internet is huge. Meeting people on the same wavelength is rare. These are sites I visit, read, and want you to see too."
+
+[linksMyInfo]
+other = "MY INFO · Name card"
+
+[linksMyInfoHint]
+other = "Copy to apply"
+
+[linksFieldName]
+other = "Name"
+
+[linksFieldUrl]
+other = "URL"
+
+[linksFieldDesc]
+other = "Desc"
+
+[linksFieldAvatar]
+other = "Avatar"
+
+[linksCopyText]
+other = "Plain text"
+
+[linksCopyMd]
+other = "Markdown"
+
+[linksHowToApply]
+other = "HOW TO APPLY"
+
+[linksApplyStep1]
+other = "Add this site to your friend-links page first (so I can visit you back)."
+
+[linksApplyStep2Pre]
+other = "Find my email on the "
+
+[linksApplyAbout]
+other = "about"
+
+[linksApplyStep2Post]
+other = " page, then send me an email with "
+
+[linksApplyFields]
+other = "site name / URL / description / avatar"
+
+[linksApplyStep2Tail]
+other = "."
+
+[linksApplyStep3]
+other = "Or just leave a comment on any post with the same info."
+
+[linksApplyNote]
+other = "Preference: original, regularly-updated, content-driven personal sites. No commercial sites, scrapers, or long-dormant ones."
+
+[linksEmpty]
+other = "No friends here yet — you could be the first :)"
+
+# ===== Douban (books + movies aggregator) =====
+[doubanLabel]
+other = "SHELVES · Books & Films"
+
+[doubanTitle]
+other = "Read · Watched"
+
+[doubanTabBooks]
+other = "Books"
+
+[doubanTabMovies]
+other = "Films"
+
+[doubanNoBooks]
+other = "No books yet."
+
+[doubanNoMovies]
+other = "No films yet."
+
+# ===== Feed (RSS overview) =====
+[feedLabel]
+other = "RSS · ATOM"
+
+[feedTitlePrefix]
+other = "Subscribe to "
+
+[feedSubtitlePre]
+other = "Paste this URL into "
+
+[feedSubtitlePost]
+other = " and you'll get new posts pushed to your reader automatically."
+
+[feedUrl]
+other = "FEED URL"
+
+[feedViewRaw]
+other = "View raw XML"
+
+[feedLatestPosts]
+other = "Latest posts"
+
+# ===== 404 =====
+[notFoundTitle]
+other = "Page not found"
+
+[notFoundSubtitle]
+other = "What you were looking for may have been moved, or never existed."
+
+# ===== Search =====
+[searchTitle]
+other = "Search"
+
+[searchSubtitlePre]
+other = "Search across posts, projects, books, and films. Or press "
+
+[searchSubtitlePost]
+other = " on any page."
+
+[searchNoJS]
+other = "Search requires JavaScript."
+
+[searchNoIndex]
+other = "Search index hasn't been generated yet."
+
+[searchNoIndexHintPre]
+other = "Run "
+
+[searchNoIndexHintPost]
+other = " locally to enable it."
+
+[searchPlaceholder]
+other = "Search posts…"
+
+[searchClear]
+other = "Clear"
+
+[searchLoadMore]
+other = "Load more"
+
+[searchLabel]
+other = "Search"
+
+[searchFiltersLabel]
+other = "Filters"
+
+[searchZeroResults]
+other = "No results for \"[SEARCH_TERM]\""
+
+[searchManyResults]
+other = "[COUNT] results for \"[SEARCH_TERM]\""
+
+[searchOneResult]
+other = "1 result for \"[SEARCH_TERM]\""
+
+[searchSearching]
+other = "Searching for \"[SEARCH_TERM]\"…"
