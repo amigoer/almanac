@@ -1,6 +1,8 @@
 {{ define "main" }}
-{{- /* 首页：刊头（含个人信息）+ 文章流（仅 posts） */ -}}
-{{- $allItems := where .Site.RegularPages "Section" "posts" -}}
+{{- /* 首页：刊头（含个人信息）+ 混合 feed
+       feed 范围由 site.Params.homeSections 控制，默认 posts / projects / reading / watching */ -}}
+{{- $sections := .Site.Params.homeSections | default (slice "posts" "projects" "reading" "watching") -}}
+{{- $allItems := where .Site.RegularPages "Section" "in" $sections -}}
 {{- $items := first 8 ($allItems.ByDate.Reverse) -}}
 
 {{- $author := .Site.Params.author | default "Amigoer" -}}
