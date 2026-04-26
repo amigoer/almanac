@@ -1,0 +1,19 @@
+{{- /* 文章侧边目录：xl 以上视口（≥1280px）固定显示在右侧空白处
+       依赖：
+       - assets/js/main.js 的 Alpine `tocSpy` 组件（IntersectionObserver 高亮当前章节）
+       - assets/css/main.css 的 `.toc-link[data-active="true"]` 高亮样式 */ -}}
+
+{{- $headings := .Fragments.Headings -}}
+{{- if $headings -}}
+<aside class="hidden xl:block fixed top-24 right-6 w-56 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1"
+       x-data="tocSpy">
+  <div class="text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-3 pb-2 border-b border-border">
+    {{ i18n "tocTitle" }}
+  </div>
+  <nav class="text-[13px] space-y-0.5">
+    {{ range $headings }}
+      {{ partial "toc-item.html" . }}
+    {{ end }}
+  </nav>
+</aside>
+{{- end -}}

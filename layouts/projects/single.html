@@ -2,6 +2,7 @@
 {{- $statusMap := dict "active" (dict "label" (i18n "statusActive") "variant" "success") "maintained" (dict "label" (i18n "statusMaintained") "variant" "brand") "archived" (dict "label" (i18n "statusArchived") "variant" "muted") "experimental" (dict "label" (i18n "statusExperimental") "variant" "outline") -}}
 {{- $st := index $statusMap (.Params.status | default "active") -}}
 
+{{ partial "toc.html" . }}
 <article class="mx-auto max-w-3xl px-4 md:px-8 py-10 space-y-8">
   <header class="space-y-4 pb-6 border-b border-border">
     <div class="flex flex-wrap items-center gap-2">
