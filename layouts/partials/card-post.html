@@ -1,12 +1,12 @@
-{{- /* 标准卡片（小图）：左 cover (固定 176px) + 右内容；卡片整体固定 h-36 = 144px */ -}}
+{{- /* 标准卡片：移动端图在上方，桌面端图在左侧（176px）+ 右内容固定 144px */ -}}
 <article class="group relative overflow-hidden rounded-lg border border-border bg-card transition-all hover:border-foreground/30 hover:bg-accent/40">
-  <a href="{{ .RelPermalink }}" class="flex h-36">
-    <div class="hidden sm:block w-44 shrink-0 p-2.5">
+  <a href="{{ .RelPermalink }}" class="flex flex-col sm:flex-row sm:h-36">
+    <div class="aspect-[16/9] sm:aspect-auto sm:w-44 sm:shrink-0 p-2.5 sm:pr-0">
       {{ partial "post-cover.html" . }}
     </div>
-    <div class="flex-1 min-w-0 flex flex-col justify-between p-4 sm:p-4 sm:pl-2">
+    <div class="flex-1 min-w-0 flex flex-col sm:justify-between gap-3 sm:gap-0 p-4 pt-2 sm:pt-4 sm:pl-2">
       <div class="min-w-0">
-        <div class="flex items-center gap-2 mb-1.5 text-[11px] font-mono text-muted-foreground">
+        <div class="flex items-center gap-2 mb-2 text-[11px] font-mono text-muted-foreground">
           {{ with .Date }}
             <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>
           {{ end }}
@@ -18,7 +18,7 @@
         <h3 class="text-base font-semibold tracking-tight leading-snug line-clamp-2 group-hover:text-brand transition-colors">
           {{ .Title }}
         </h3>
-        <p class="mt-1.5 text-[13px] text-muted-foreground line-clamp-2 leading-relaxed">
+        <p class="mt-2 text-[13px] text-muted-foreground line-clamp-2 leading-relaxed">
           {{ .Summary | plainify | truncate 100 }}
         </p>
       </div>
