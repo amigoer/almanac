@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="{{ .Site.LanguageCode | default "zh-cn" }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body class="min-h-screen flex flex-col bg-background text-foreground antialiased">
+  {{ partial "header.html" . }}
+
+  <div class="flex-1 mx-auto w-full max-w-4xl px-4 md:px-6 lg:px-8">
+    <main class="py-8 md:py-10">
+      {{ block "main" . }}{{ end }}
+    </main>
+  </div>
+
+  {{ partial "footer.html" . }}
+
+  {{- /* 移动端菜单抽屉 */ -}}
+  {{- $current := .RelPermalink -}}
+  {{- $author := .Site.Params.author | default "Amigoer" -}}
+  {{- $avatar := .Site.Params.avatar | default "/resume/amigoer.png" -}}
+  {{- $position := .Site.Params.position | default "" -}}
+  {{- $location := .Site.Params.location | default "" -}}
+  {{- $statusText := .Site.Params.statusText | default "" -}}
+  {{- $github := "" -}}
+  {{- range .Site.Params.socialIcons }}{{ if eq .name "github" }}{{ $github = .url }}{{ end }}{{ end -}}
+  {{- $navMain := slice
+    (dict "url" "/" "name" (i18n "navHome") "icon" "rocket")
+    (dict "url" "/projects/" "name" (i18n "navProjects") "icon" "folder")
+    (dict "url" "/douban/" "name" (i18n "navDouban") "icon" "book-open")
+    (dict "url" "/archives/" "name" (i18n "navArchives") "icon" "archive")
+    (dict "url" "/about/" "name" (i18n "navAbout") "icon" "user")
+    (dict "url" "/links/" "name" (i18n "navLinks") "icon" "external-link")
+  -}}
+  <div x-data x-cloak class="md:hidden">
+    <div x-show="$store.sheet.open" @click="$store.sheet.close()" x-transition.opacity
+         class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+         style="display: none;"></div>
+    <aside x-show="$store.sheet.open" x-transition:enter="transition ease-out duration-200"
+           x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+           x-transition:leave="transition ease-in duration-150"
+           x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+           class="fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] bg-background border-r border-border flex flex-col overflow-y-auto"
+           style="display: none;">
+
+      <!-- 顶栏：标题 + 关闭 -->
+      <div class="flex items-center justify-between h-14 px-4 border-b border-border shrink-0">
+        <span class="font-semibold tracking-tight text-[15px]">{{ .Site.Title }}</span>
+        <button @click="$store.sheet.close()" class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground" aria-label="{{ i18n "navClose" }}">
+          {{ partial "icon.html" "x" }}
+        </button>
+      </div>
+
+      <!-- Profile -->
+      <div class="px-4 py-4 flex items-center gap-3 border-b border-border">
+        <div class="relative shrink-0">
+          <img src="{{ $avatar | relURL }}" alt="{{ $author }}"
+               class="size-12 rounded-full object-cover border border-border">
+          {{ with $statusText }}
+            <span class="absolute -bottom-0.5 -right-0.5 flex size-3 items-center justify-center rounded-full bg-background" title="{{ . }}">
+              <span class="relative flex size-1.5">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span>
+                <span class="relative inline-flex size-1.5 rounded-full bg-success"></span>
+              </span>
+            </span>
+          {{ end }}
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="font-semibold text-[15px] truncate">{{ $author }}</div>
+          {{ if or $position $location }}
+            <div class="text-[12px] text-muted-foreground truncate">
+              {{ with $position }}<span>{{ . }}</span>{{ end }}
+              {{ if and $position $location }}<span class="opacity-50 mx-1">·</span>{{ end }}
+              {{ with $location }}<span>{{ . }}</span>{{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </div>
+
+      <!-- 主导航 -->
+      <nav class="px-3 py-3">
+        <div class="px-2 mb-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground">{{ i18n "sidebarNav" }}</div>
+        {{ range $navMain }}
+          {{- $isActive := and (ne .url "/") (strings.HasPrefix $current .url) -}}
+          {{- if eq $current .url }}{{ $isActive = true }}{{ end -}}
+          <a href="{{ .url | relURL }}" @click="$store.sheet.close()"
+             class="group flex items-center gap-3 px-2 py-2.5 rounded-md text-[15px] {{ if $isActive }}text-brand bg-accent/40 font-medium{{ else }}text-foreground/85 hover:text-foreground hover:bg-accent{{ end }} transition-colors">
+            <span class="{{ if $isActive }}text-brand{{ else }}text-muted-foreground group-hover:text-foreground{{ end }} transition-colors">
+              {{ partial "icon.html" (dict "name" .icon "class" "size-4") }}
+            </span>
+            <span>{{ .name }}</span>
+          </a>
+        {{ end }}
+      </nav>
+
+      <!-- 次级 -->
+      <nav class="px-3 py-3 border-t border-border">
+        <div class="px-2 mb-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground">{{ i18n "navLinksGroup" }}</div>
+        {{- with $github }}
+          <a href="{{ . }}" target="_blank" rel="noopener" @click="$store.sheet.close()"
+             class="group flex items-center gap-3 px-2 py-2.5 rounded-md text-[15px] text-foreground/85 hover:text-foreground hover:bg-accent transition-colors">
+            <span class="text-muted-foreground group-hover:text-foreground transition-colors">
+              {{ partial "icon.html" (dict "name" "github" "class" "size-4") }}
+            </span>
+            <span class="flex-1">GitHub</span>
+            <span class="text-muted-foreground/60">
+              {{ partial "icon.html" (dict "name" "external-link" "class" "size-3") }}
+            </span>
+          </a>
+        {{- end }}
+        {{- $isResume := strings.HasPrefix $current "/resume" -}}
+        <a href="{{ "/resume/" | relURL }}" @click="$store.sheet.close()"
+           class="group flex items-center gap-3 px-2 py-2.5 rounded-md text-[15px] {{ if $isResume }}text-brand bg-accent/40 font-medium{{ else }}text-foreground/85 hover:text-foreground hover:bg-accent{{ end }} transition-colors">
+          <span class="{{ if $isResume }}text-brand{{ else }}text-muted-foreground group-hover:text-foreground{{ end }} transition-colors">
+            {{ partial "icon.html" (dict "name" "id-card" "class" "size-4") }}
+          </span>
+          <span>{{ i18n "navResume" }}</span>
+        </a>
+      </nav>
+
+      <!-- 底部：社交 + 版权 -->
+      <div class="mt-auto px-4 py-4 border-t border-border space-y-3">
+        <div class="flex items-center gap-1">
+          {{ range .Site.Params.socialIcons }}
+            {{- $icon := "external-link" -}}
+            {{- if eq .name "github" }}{{ $icon = "github" }}
+            {{- else if eq .name "mail" }}{{ $icon = "mail" }}
+            {{- else if eq .name "email" }}{{ $icon = "mail" }}
+            {{- else if eq .name "rss" }}{{ $icon = "rss" }}
+            {{- end -}}
+            <a href="{{ .url }}"
+               {{ if not (strings.HasPrefix .url "mailto:") }}target="_blank" rel="noopener"{{ end }}
+               class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+               aria-label="{{ .name }}" title="{{ .name }}">
+              {{ partial "icon.html" $icon }}
+            </a>
+          {{ end }}
+        </div>
+        <div class="text-[11px] font-mono text-muted-foreground/70">© {{ now.Year }} {{ .Site.Title }}</div>
+      </div>
+    </aside>
+  </div>
+
+  {{- /* ⌘K 命令面板搜索 */ -}}
+  <div x-data x-cloak>
+    <div x-show="$store.search.open" @click="$store.search.close()" x-transition.opacity
+         class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+         style="display: none;"></div>
+    <div x-show="$store.search.open" x-transition:enter="transition ease-out duration-150"
+         x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         class="fixed inset-x-4 top-[10vh] md:inset-x-0 md:left-1/2 md:-translate-x-1/2 z-50 w-auto md:w-full max-w-2xl"
+         style="display: none;">
+      <div class="rounded-lg border border-border bg-popover overflow-hidden max-h-[70vh] flex flex-col">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+          <span class="text-[11px] uppercase tracking-wider text-muted-foreground inline-flex items-center gap-1.5 font-mono">
+            {{ partial "icon.html" (dict "name" "search" "class" "size-3.5") }}
+            {{ i18n "navSearch" }}
+          </span>
+          <button @click="$store.search.close()" class="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground" aria-label="{{ i18n "navClose" }}">
+            {{ partial "icon.html" "x" }}
+          </button>
+        </div>
+        <div id="cmdk-search" class="overflow-y-auto p-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    [x-cloak] { display: none !important; }
+    /* Pagefind UI 适配 Vercel 风格 */
+    #cmdk-search .pagefind-ui__form,
+    .pagefind-search-container .pagefind-ui__form { padding: 0; }
+    #cmdk-search .pagefind-ui__search-input,
+    .pagefind-search-container .pagefind-ui__search-input {
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      border: 1px solid hsl(var(--border));
+      border-radius: 6px;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    #cmdk-search .pagefind-ui__search-input:focus,
+    .pagefind-search-container .pagefind-ui__search-input:focus {
+      outline: none;
+      border-color: hsl(var(--foreground));
+    }
+    #cmdk-search .pagefind-ui__results-area,
+    .pagefind-search-container .pagefind-ui__results-area { margin-top: 0.5rem; }
+    #cmdk-search .pagefind-ui__result,
+    .pagefind-search-container .pagefind-ui__result {
+      padding: 0.75rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      background: hsl(var(--card));
+      transition: border-color 0.15s, background 0.15s;
+    }
+    #cmdk-search .pagefind-ui__result:hover,
+    .pagefind-search-container .pagefind-ui__result:hover {
+      border-color: hsl(var(--foreground));
+      background: hsl(var(--accent));
+    }
+    #cmdk-search .pagefind-ui__result-title a,
+    .pagefind-search-container .pagefind-ui__result-title a {
+      color: hsl(var(--foreground));
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    #cmdk-search .pagefind-ui__result-excerpt,
+    .pagefind-search-container .pagefind-ui__result-excerpt {
+      color: hsl(var(--muted-foreground));
+      font-size: 0.85rem;
+      line-height: 1.55;
+      margin-top: 0.25rem;
+    }
+    #cmdk-search mark,
+    .pagefind-search-container mark {
+      background: hsl(var(--foreground) / 0.12);
+      color: hsl(var(--foreground));
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+  </style>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{{ define "main" }}
+<div class="mx-auto max-w-3xl px-4 md:px-8 py-10 space-y-6">
+  <header class="space-y-2 pb-6 border-b border-border">
+    <h1 class="text-3xl font-bold tracking-tight">{{ i18n "searchTitle" }}</h1>
+    <p class="text-sm text-muted-foreground">{{ i18n "searchSubtitlePre" }}<kbd class="inline-flex items-center rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-mono">⌘K</kbd>{{ i18n "searchSubtitlePost" }}</p>
+  </header>
+
+  <div id="search" class="pagefind-search-container"
+       data-no-index="{{ i18n "searchNoIndex" }}"
+       data-no-index-pre="{{ i18n "searchNoIndexHintPre" }}"
+       data-no-index-post="{{ i18n "searchNoIndexHintPost" }}"
+       data-t-placeholder="{{ i18n "searchPlaceholder" }}"
+       data-t-clear="{{ i18n "searchClear" }}"
+       data-t-load-more="{{ i18n "searchLoadMore" }}"
+       data-t-label="{{ i18n "searchLabel" }}"
+       data-t-filters="{{ i18n "searchFiltersLabel" }}"
+       data-t-zero="{{ i18n "searchZeroResults" }}"
+       data-t-many="{{ i18n "searchManyResults" }}"
+       data-t-one="{{ i18n "searchOneResult" }}"
+       data-t-searching="{{ i18n "searchSearching" }}"></div>
+
+  <noscript>
+    <div class="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+      {{ i18n "searchNoJS" }}
+    </div>
+  </noscript>
+</div>
+
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css" onerror="this.dataset.failed='1'">
+<script src="/pagefind/pagefind-ui.js" onerror="this.dataset.failed='1'"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const root = document.getElementById("search");
+    if (typeof PagefindUI === "undefined") {
+      root.innerHTML =
+        '<div class="rounded-lg border border-border bg-muted/40 p-6 text-sm text-muted-foreground space-y-2"><p>' +
+        root.dataset.noIndex +
+        '</p><p class="text-xs">' +
+        root.dataset.noIndexPre +
+        '<code class="rounded bg-background px-1.5 py-0.5 border border-border font-mono">npm run build</code>' +
+        root.dataset.noIndexPost +
+        '</p></div>';
+      return;
+    }
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      showImages: false,
+      resetStyles: false,
+      translations: {
+        placeholder: root.dataset.tPlaceholder,
+        clear_search: root.dataset.tClear,
+        load_more: root.dataset.tLoadMore,
+        search_label: root.dataset.tLabel,
+        filters_label: root.dataset.tFilters,
+        zero_results: root.dataset.tZero,
+        many_results: root.dataset.tMany,
+        one_result: root.dataset.tOne,
+        searching: root.dataset.tSearching,
+      },
+    });
+  });
+</script>
+{{ end }}

@@ -1,0 +1,107 @@
+{{- /* 顶部：banner 背景图 + sticky nav（banner 与 nav 拆为兄弟节点，
+       让 nav 的 containing block 是 body，scroll 整页都贴顶） */ -}}
+
+{{- $bannerImage := .Site.Params.bannerImage -}}
+
+<!-- Banner：纯装饰，普通 flow -->
+<div class="relative h-40 md:h-56 lg:h-64 overflow-hidden"
+     {{ if $bannerImage }}style="background: url('{{ $bannerImage | relURL }}') center / cover no-repeat;"
+     {{ else }}style="background:
+       radial-gradient(ellipse at 25% 30%, hsl(var(--primary) / 0.22) 0%, transparent 55%),
+       radial-gradient(ellipse at 75% 70%, hsl(var(--primary) / 0.14) 0%, transparent 60%),
+       linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);"
+     {{ end }}>
+  <div class="absolute inset-0 cover-noise opacity-50 pointer-events-none"></div>
+  {{- /* 底部柔光：让 banner 与 nav 平滑过渡 */ -}}
+  <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-background/40 pointer-events-none"></div>
+</div>
+
+<!-- 横向 Nav：sticky 贴顶；初始透明（融合 banner），滚动后变实色 -->
+<header x-data="{ scrolled: false }"
+        @scroll.window.throttle.16ms="scrolled = window.scrollY > 120"
+        :class="scrolled ? 'bg-background/85 backdrop-blur-md border-border' : 'bg-transparent border-transparent'"
+        class="sticky top-0 z-40 -mt-14 border-b transition-colors duration-200">
+  <div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
+    <div class="flex h-14 items-center justify-between gap-4">
+
+        <!-- 左：移动菜单 + LOGO + 主导航 -->
+        <div class="flex items-center gap-5 min-w-0">
+          <button x-data @click="$store.sheet.toggle()"
+            class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground md:hidden"
+            aria-label="{{ i18n "navOpenMenu" }}">
+            {{ partial "icon.html" "menu" }}
+          </button>
+          <a href="{{ "/" | relURL }}" class="flex items-center gap-1.5 group shrink-0">
+            <span class="font-bold tracking-tight text-[16px]">{{ .Site.Title }}</span>
+          </a>
+
+          {{- /* 主导航：首页 / 项目 / 豆瓣 / 归档 / 关于 / 友链 */ -}}
+          <nav class="hidden md:flex items-center gap-4 text-[14px]">
+            {{- $current := .RelPermalink -}}
+            {{- $items := slice
+              (dict "url" "/" "name" (i18n "navHome"))
+              (dict "url" "/projects/" "name" (i18n "navProjects"))
+              (dict "url" "/douban/" "name" (i18n "navDouban"))
+              (dict "url" "/archives/" "name" (i18n "navArchives"))
+              (dict "url" "/about/" "name" (i18n "navAbout"))
+              (dict "url" "/links/" "name" (i18n "navLinks"))
+            -}}
+            {{- range $items -}}
+              {{- $isActive := and (ne .url "/") (strings.HasPrefix $current .url) -}}
+              {{- if eq $current .url }}{{ $isActive = true }}{{ end -}}
+              <a href="{{ .url | relURL }}"
+                 class="font-medium transition-colors {{ if $isActive }}text-brand{{ else }}text-foreground/75 hover:text-foreground{{ end }}">
+                {{ .name }}
+              </a>
+            {{- end -}}
+          </nav>
+        </div>
+
+        <!-- 右：Github / 简历 + 搜索 / 主题 / RSS -->
+        {{- $github := "" -}}
+        {{- range .Site.Params.socialIcons }}
+          {{- if eq .name "github" -}}{{ $github = .url -}}{{- end -}}
+        {{- end -}}
+        <div class="flex items-center gap-1">
+          {{- with $github }}
+            <a href="{{ . }}" target="_blank" rel="noopener" title="Github" aria-label="Github"
+               class="hidden md:inline-flex items-center gap-1.5 h-8 px-2 lg:px-2.5 rounded-md text-[13px] font-medium text-foreground/75 hover:text-foreground hover:bg-accent transition-colors">
+              {{ partial "icon.html" (dict "name" "github" "class" "size-4") }}
+              <span class="hidden lg:inline">Github</span>
+            </a>
+          {{- end }}
+          {{- $isResume := strings.HasPrefix .RelPermalink "/resume" -}}
+          <a href="{{ "/resume/" | relURL }}"
+             class="hidden md:inline-flex items-center h-8 px-2 lg:px-2.5 rounded-md text-[13px] font-medium {{ if $isResume }}text-brand{{ else }}text-foreground/75 hover:text-foreground hover:bg-accent{{ end }} transition-colors">
+            {{ i18n "navResume" }}
+          </a>
+          <span :class="scrolled ? 'bg-border' : 'bg-foreground/15'"
+                class="hidden md:block w-px h-5 mx-0.5 transition-colors"></span>
+          <button @click="$store.search.toggle()"
+            :class="scrolled ? 'border-border bg-background' : 'border-foreground/15 bg-transparent'"
+            class="hidden sm:inline-flex items-center gap-2 h-8 px-2.5 rounded-md border text-xs text-muted-foreground hover:border-foreground/30 transition-colors font-mono">
+            {{ partial "icon.html" (dict "name" "search" "class" "size-3.5") }}
+            <span>{{ i18n "navSearchPlaceholder" }}</span>
+            <kbd :class="scrolled ? 'border-border' : 'border-foreground/15'"
+                 class="ml-1.5 inline-flex items-center rounded border px-1 py-0 text-[10px] transition-colors">⌘K</kbd>
+          </button>
+          <button x-data @click="$store.search.toggle()"
+            class="sm:hidden inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground" aria-label="{{ i18n "navSearch" }}">
+            {{ partial "icon.html" "search" }}
+          </button>
+
+          <button x-data="themeSwitcher" @click="cycle()" :title="label()"
+            class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
+            aria-label="{{ i18n "navToggleTheme" }}">
+            <template x-if="icon() === 'sun'">{{ partial "icon.html" "sun" }}</template>
+            <template x-if="icon() === 'moon'">{{ partial "icon.html" "moon" }}</template>
+            <template x-if="icon() === 'monitor'">{{ partial "icon.html" "monitor" }}</template>
+          </button>
+
+          <a href="{{ "/feed/" | relURL }}" class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground" aria-label="RSS" title="{{ i18n "navSubscribe" }}">
+            {{ partial "icon.html" "rss" }}
+          </a>
+        </div>
+      </div>
+    </div>
+</header>

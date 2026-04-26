@@ -1,0 +1,90 @@
+{{ define "main" }}
+{{- $statusMap := dict "watching" (dict "label" (i18n "statusWatching") "variant" "brand") "watched" (dict "label" (i18n "statusWatched") "variant" "success") "wishlist" (dict "label" (i18n "statusMovieWishlist") "variant" "outline") "abandoned" (dict "label" (i18n "statusMovieAbandoned") "variant" "muted") -}}
+{{- $st := index $statusMap (.Params.status | default "watching") -}}
+{{- $rating := int (.Params.rating | default 0) -}}
+
+<article class="mx-auto max-w-3xl px-4 md:px-8 py-10 space-y-8">
+  <header class="grid gap-6 md:grid-cols-[180px_1fr] pb-6 border-b border-border">
+    <div class="aspect-[2/3] overflow-hidden rounded-lg border border-border bg-muted">
+      {{ with .Params.poster }}
+        <img src="{{ . }}" alt="{{ $.Title }}" class="w-full h-full object-cover" loading="lazy">
+      {{ else }}
+        <div class="flex h-full items-center justify-center text-muted-foreground/50">
+          {{ partial "icon.html" (dict "name" "film" "class" "size-10") }}
+        </div>
+      {{ end }}
+    </div>
+    <div class="space-y-3 min-w-0">
+      <div class="flex flex-wrap items-center gap-2">
+        {{ with $st }}{{ partial "badge.html" (dict "text" .label "variant" .variant) }}{{ end }}
+        {{ with .Params.type }}
+          {{ partial "badge.html" (dict "text" . "variant" "outline") }}
+        {{ end }}
+        {{ with .Date }}
+          <time datetime="{{ .Format "2006-01-02" }}" class="text-xs text-muted-foreground">{{ .Format "2006-01-02" }}</time>
+        {{ end }}
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight leading-tight">{{ .Title }}</h1>
+      <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
+        {{ with .Params.director }}
+          <dt class="text-muted-foreground">{{ i18n "director" }}</dt><dd>{{ . }}</dd>
+        {{ end }}
+        {{ with .Params.cast }}
+          <dt class="text-muted-foreground">{{ i18n "cast" }}</dt><dd>{{ delimit . "·" }}</dd>
+        {{ end }}
+        {{ with .Params.year }}
+          <dt class="text-muted-foreground">{{ i18n "year" }}</dt><dd class="font-mono">{{ . }}</dd>
+        {{ end }}
+        {{ with .Params.genre }}
+          <dt class="text-muted-foreground">{{ i18n "genre" }}</dt><dd>{{ delimit . "·" }}</dd>
+        {{ end }}
+        {{ if gt $rating 0 }}
+          <dt class="text-muted-foreground">{{ i18n "rating" }}</dt>
+          <dd class="inline-flex items-center gap-0.5 text-amber-500">
+            {{ range $i, $_ := seq 5 }}
+              {{ if le $i $rating }}
+                {{ partial "icon.html" (dict "name" "star" "class" "size-3.5 fill-current") }}
+              {{ else }}
+                {{ partial "icon.html" (dict "name" "star" "class" "size-3.5 opacity-25") }}
+              {{ end }}
+            {{ end }}
+            <span class="ml-1 text-xs text-muted-foreground">{{ $rating }}/5</span>
+          </dd>
+        {{ end }}
+      </dl>
+      {{ with .Params.summary }}
+        <p class="text-sm text-muted-foreground leading-relaxed pt-1">{{ . }}</p>
+      {{ end }}
+      {{ with .Params.douban }}
+        <a href="{{ . }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs text-brand hover:underline pt-2">
+          {{ partial "icon.html" (dict "name" "external-link" "class" "size-3") }}
+          {{ i18n "doubanLink" }}
+        </a>
+      {{ end }}
+    </div>
+  </header>
+
+  <div class="prose-amigoer">
+    {{ .Content }}
+  </div>
+
+  {{ if or .NextInSection .PrevInSection }}
+    <nav class="mt-10 pt-6 border-t border-border grid gap-3 md:grid-cols-2">
+      {{ with .PrevInSection }}
+        <a href="{{ .RelPermalink }}" class="group rounded-lg border border-border bg-card p-4 hover:border-foreground/20 transition-colors">
+          <div class="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{{ i18n "prevMovie" }}</div>
+          <div class="text-sm font-medium group-hover:text-brand transition-colors line-clamp-2">{{ .Title }}</div>
+        </a>
+      {{ else }}<div></div>{{ end }}
+      {{ with .NextInSection }}
+        <a href="{{ .RelPermalink }}" class="group rounded-lg border border-border bg-card p-4 hover:border-foreground/20 transition-colors text-right">
+          <div class="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{{ i18n "nextMovie" }}</div>
+          <div class="text-sm font-medium group-hover:text-brand transition-colors line-clamp-2">{{ .Title }}</div>
+        </a>
+      {{ end }}
+    </nav>
+  {{ end }}
+
+  {{ partial "waline.html" . }}
+</article>
+{{ end }}

@@ -1,0 +1,37 @@
+{{- /* 卡片尺寸：完全由 front matter `cardSize` 控制
+       预设：
+       - "feature"  大卡（顶部 banner 大图 + 标题 / 摘要 / 标签）
+       - "standard" 中卡（左小图 + 右内容，默认）
+       - "compact"  紧凑卡（无图，标题 + 摘要 + 标签）
+       - "note"     小卡（无图，单行：日期 + 类型 + 标题）
+
+     未指定时默认：有图 → standard，无图 → note */ -}}
+
+{{- $cardSize := .Params.cardSize | default "" -}}
+{{- $result := "" -}}
+
+{{- if $cardSize -}}
+  {{- $result = $cardSize -}}
+{{- else -}}
+  {{- /* 默认行为：检测是否有图片 */ -}}
+  {{- $hasImage := false -}}
+  {{- with .Params.cover -}}
+    {{- if or (hasPrefix . "http") (hasPrefix . "//") (hasPrefix . "/") -}}
+      {{- $hasImage = true -}}
+    {{- else -}}
+      {{- with $.Resources.GetMatch . -}}{{ $hasImage = true }}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $hasImage -}}
+    {{- with .Resources.ByType "image" -}}
+      {{- with index . 0 -}}{{ $hasImage = true }}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $hasImage -}}
+    {{- $result = "standard" -}}
+  {{- else -}}
+    {{- $result = "note" -}}
+  {{- end -}}
+{{- end -}}
+
+{{ return $result }}

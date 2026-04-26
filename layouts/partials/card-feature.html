@@ -1,0 +1,34 @@
+{{- /* 大图卡片（feature）：上 cover（aspect 16/8）+ 下内容；用于最新/置顶 */ -}}
+<article class="group relative overflow-hidden rounded-lg border border-border bg-card transition-all hover:border-foreground/30 hover:bg-accent/30">
+  <a href="{{ .RelPermalink }}" class="block">
+    <div class="aspect-[16/8] p-2.5 pb-0">
+      {{ partial "post-cover.html" . }}
+    </div>
+    <div class="p-5 pt-4 space-y-2">
+      <div class="flex items-center gap-2 text-[11px] font-mono text-muted-foreground">
+        <span class="inline-flex items-center rounded bg-brand/10 text-brand px-1.5 py-0.5 uppercase tracking-wider">FEATURED</span>
+        {{ with .Date }}
+          <span class="opacity-40">·</span>
+          <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>
+        {{ end }}
+        {{ with .ReadingTime }}
+          <span class="opacity-40">·</span>
+          <span>{{ . }} MIN READ</span>
+        {{ end }}
+      </div>
+      <h3 class="text-2xl font-bold tracking-tight leading-tight line-clamp-2 group-hover:text-brand transition-colors">
+        {{ .Title }}
+      </h3>
+      <p class="font-serif text-[15px] text-muted-foreground line-clamp-2 leading-relaxed">
+        {{ .Summary | plainify | truncate 160 }}
+      </p>
+      {{ with .Params.tags }}
+        <div class="pt-1 flex flex-wrap gap-2 text-[10px] font-mono text-muted-foreground/70">
+          {{ range first 5 . }}
+            <span>#{{ . }}</span>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  </a>
+</article>

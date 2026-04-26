@@ -1,0 +1,90 @@
+{{- /* Cover 优先级：
+       1. front matter `cover` 字段（URL / 相对路径 / 绝对路径）
+       2. 页面 bundle 里第一张 image resource
+       3. 渐变兜底（按第一个 tag 哈希）
+
+     宽图 (logo / banner，比例 > 2) 用 object-contain，避免把内容裁掉；
+     普通照片用 object-cover 充满。
+     可在 front matter 用 `coverFit: contain | cover` 强制指定。 */ -}}
+
+{{- $coverURL := "" -}}
+{{- $coverAlt := .Title -}}
+{{- $isWide := false -}}
+{{- $coverFit := .Params.coverFit | default "auto" -}}
+
+{{- /* 1. cover param */ -}}
+{{- with .Params.cover -}}
+  {{- if or (hasPrefix . "http") (hasPrefix . "//") (hasPrefix . "/") -}}
+    {{- $coverURL = . -}}
+  {{- else -}}
+    {{- with $.Resources.GetMatch . -}}
+      {{- $coverURL = .RelPermalink -}}
+      {{- if and .Width .Height (gt (div (mul .Width 1.0) .Height) 2.0) -}}
+        {{- $isWide = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 2. 页面第一张图（page bundle 资源）*/ -}}
+{{- if not $coverURL -}}
+  {{- with .Resources.ByType "image" -}}
+    {{- with index . 0 -}}
+      {{- $coverURL = .RelPermalink -}}
+      {{- $coverAlt = .Name -}}
+      {{- if and .Width .Height (gt (div (mul .Width 1.0) .Height) 2.0) -}}
+        {{- $isWide = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* coverFit 显式覆盖 */ -}}
+{{- if eq $coverFit "contain" -}}{{- $isWide = true -}}{{- end -}}
+{{- if eq $coverFit "cover" -}}{{- $isWide = false -}}{{- end -}}
+
+{{- /* 渲染：有图用图，没图用渐变 */ -}}
+{{- if $coverURL -}}
+
+<div class="relative overflow-hidden rounded-md h-full w-full {{ if $isWide }}bg-card flex items-center justify-center{{ else }}bg-muted{{ end }}">
+  <img src="{{ $coverURL }}" alt="{{ $coverAlt }}"
+       class="{{ if $isWide }}max-h-full max-w-full object-contain p-3{{ else }}size-full object-cover{{ end }} transition-transform duration-500 group-hover:scale-[1.02]"
+       loading="lazy">
+  <div class="absolute bottom-1.5 left-1.5 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider backdrop-blur-sm bg-background/70 text-foreground">
+    <span class="size-1 rounded-full bg-brand"></span>
+    {{ .Section }}
+  </div>
+</div>
+
+{{- else -}}
+
+{{- /* 渐变 fallback */ -}}
+{{- $tags := .Params.tags | default (slice "笔记") -}}
+{{- $key := index $tags 0 -}}
+{{- $hash := hash.FNV32a $key -}}
+{{- $palettes := slice
+  (dict "from" "#f3e3d3" "to" "#c96442" "fg" "#5a2d1a")
+  (dict "from" "#ede9de" "to" "#9c8c6e" "fg" "#3d3929")
+  (dict "from" "#e6e2cf" "to" "#7e8964" "fg" "#2e3322")
+  (dict "from" "#e5dfd3" "to" "#8c7d68" "fg" "#332b1f")
+  (dict "from" "#efe2da" "to" "#b27a5c" "fg" "#4a2a1a")
+  (dict "from" "#e9e4dc" "to" "#7c8fa3" "fg" "#283441")
+  (dict "from" "#f0e3d4" "to" "#a6824c" "fg" "#4d3617")
+  (dict "from" "#e8e2d8" "to" "#9c87f5" "fg" "#2f2b48")
+-}}
+{{- $idx := mod $hash 8 -}}
+{{- $p := index $palettes $idx -}}
+<div class="cover-noise relative overflow-hidden rounded-md h-full w-full"
+     style="background: linear-gradient(135deg, {{ $p.from }} 0%, {{ $p.to }} 100%);">
+  <div class="absolute inset-0 flex items-center justify-center px-3">
+    <span class="text-2xl md:text-3xl font-bold tracking-tight text-center leading-tight"
+          style="color: {{ $p.fg }}; opacity: 0.78;">{{ $key }}</span>
+  </div>
+  <div class="absolute bottom-1.5 left-1.5 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider backdrop-blur-sm"
+       style="background: rgba(255,255,255,0.35); color: {{ $p.fg }};">
+    <span class="size-1 rounded-full" style="background: {{ $p.fg }}; opacity: 0.6;"></span>
+    {{ .Section }}
+  </div>
+</div>
+
+{{- end -}}

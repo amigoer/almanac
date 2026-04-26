@@ -1,0 +1,36 @@
+{{- /* 左栏 中部：导航 */ -}}
+{{- $current := .RelPermalink -}}
+
+<div class="px-1">
+  <h3 class="mb-1.5 px-2 text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground">{{ i18n "sidebarNav" }}</h3>
+  <nav class="flex flex-col gap-0.5">
+    {{- $sections := slice
+      (dict "url" "/posts/" "name" (i18n "navPosts") "icon" "file-text" "section" "posts")
+      (dict "url" "/projects/" "name" (i18n "navProjects") "icon" "rocket" "section" "projects")
+      (dict "url" "/reading/" "name" (i18n "navReading") "icon" "book-open" "section" "reading")
+      (dict "url" "/watching/" "name" (i18n "navWatching") "icon" "film" "section" "watching")
+      (dict "url" "/travel/" "name" (i18n "navTravel") "icon" "plane" "section" "travel")
+      (dict "url" "/about/" "name" (i18n "navAbout") "icon" "user" "section" "about")
+    -}}
+    {{- range $sections -}}
+      {{- $isActive := strings.HasPrefix $current .url -}}
+      {{- $count := 0 -}}
+      {{- with site.GetPage (printf "/%s" .section) -}}
+        {{- $count = len .Pages -}}
+      {{- end -}}
+      <a href="{{ .url | relURL }}"
+         class="group flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm transition-colors
+         {{ if $isActive }}bg-brand/10 text-brand font-medium{{ else }}text-muted-foreground hover:bg-accent hover:text-foreground{{ end }}">
+        <span class="flex items-center gap-2">
+          <span class="{{ if $isActive }}text-brand{{ else }}text-muted-foreground/70 group-hover:text-foreground{{ end }}">
+            {{ partial "icon.html" (dict "name" .icon "class" "size-3.5") }}
+          </span>
+          <span>{{ .name }}</span>
+        </span>
+        {{ if gt $count 0 }}
+          <span class="text-[10px] font-mono tabular-nums text-muted-foreground/60">{{ $count }}</span>
+        {{ end }}
+      </a>
+    {{- end -}}
+  </nav>
+</div>

@@ -1,0 +1,112 @@
+{{- $title := cond .IsHome .Site.Title (printf "%s · %s" .Title .Site.Title) -}}
+{{- $desc := cond (ne .Description "") .Description (cond .IsHome (.Site.Params.description | default .Site.Title) (.Summary | plainify | truncate 150)) -}}
+{{- $ogImage := .Params.ogImage | default .Site.Params.ogImage | default (.Site.Params.avatar | default "") -}}
+{{- if and $ogImage (not (or (hasPrefix $ogImage "http") (hasPrefix $ogImage "//"))) -}}
+  {{- $ogImage = $ogImage | absURL -}}
+{{- end -}}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
+
+{{- /* 字体：Inter（UI） + Source Serif 4（正文衬体） + JetBrains Mono（meta / code） */ -}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $desc }}">
+<meta name="author" content="{{ .Site.Params.author | default .Site.Title }}">
+{{ with .Params.keywords }}<meta name="keywords" content="{{ delimit . ", " }}">{{ end }}
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- /* Open Graph */ -}}
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+<meta property="og:locale" content="{{ replace (.Site.LanguageCode | default "zh-cn") "-" "_" }}">
+{{ with $ogImage }}<meta property="og:image" content="{{ . }}">{{ end }}
+{{ if .IsPage }}
+  {{ with .Date }}<meta property="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ end }}
+  {{ with .Lastmod }}<meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ end }}
+  {{ range .Params.tags }}<meta property="article:tag" content="{{ . }}">{{ end }}
+{{ end }}
+
+{{- /* Twitter Card */ -}}
+<meta name="twitter:card" content="{{ cond (ne $ogImage "") "summary_large_image" "summary" }}">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $desc }}">
+{{ with $ogImage }}<meta name="twitter:image" content="{{ . }}">{{ end }}
+
+{{- /* RSS */ -}}
+{{ with .OutputFormats.Get "rss" }}
+  <link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ $.Site.Title }}">
+{{ end }}
+
+{{- /* JSON-LD 结构化数据（文章页） */ -}}
+{{ if .IsPage }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ .Title | jsonify }},
+  "description": {{ $desc | jsonify }},
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+  "author": {
+    "@type": "Person",
+    "name": {{ .Site.Params.author | default .Site.Title | jsonify }},
+    "url": {{ .Site.BaseURL | jsonify }}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ .Permalink | jsonify }}
+  }
+  {{ with $ogImage }},"image": {{ . | jsonify }}{{ end }}
+}
+</script>
+{{ end }}
+
+{{- /* 防止暗色模式闪烁的 inline script（必须在 CSS 加载前 inline）*/ -}}
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("amigoer-theme") || "system";
+      var isDark = t === "dark" || (t === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+      if (isDark) document.documentElement.classList.add("dark");
+      document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+    } catch (e) {}
+  })();
+</script>
+
+{{- /* Tailwind CSS via Hugo Pipes + PostCSS */ -}}
+{{ with resources.Get "css/main.css" }}
+  {{ $opts := dict "inlineImports" true }}
+  {{ $css := . | css.PostCSS $opts }}
+  {{ if hugo.IsServer }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+  {{ else }}
+    {{ $css = $css | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{ end }}
+{{ end }}
+
+{{- /* 主题 JS（主题切换、Alpine 组件等）*/ -}}
+{{ with resources.Get "js/main.js" }}
+  {{ $js := . }}
+  {{ if hugo.IsServer }}
+    <script src="{{ $js.RelPermalink }}"></script>
+  {{ else }}
+    {{ $js = $js | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+  {{ end }}
+{{ end }}
+
+{{- /* Alpine.js（CDN）*/ -}}
+<script defer src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js"></script>
+
+{{- /* favicon */ -}}
+<link rel="icon" href="/favicon.ico">

@@ -1,0 +1,16 @@
+{{- /* 无图卡片（note）：单行 mono 日期 + 类型 badge + 标题；用于短条目（项目、书 / 影、随笔短帖）*/ -}}
+{{- $kind := .kind | default "POST" -}}
+{{- $page := .page -}}
+{{- $accent := .accent | default "muted" -}}
+<a href="{{ $page.RelPermalink }}"
+   class="group flex items-center gap-3 px-4 py-3 rounded-md border border-border bg-card hover:border-foreground/30 hover:bg-accent/40 transition-colors">
+  <time class="font-mono text-[11px] text-muted-foreground tabular-nums shrink-0 w-20" datetime="{{ $page.Date.Format "2006-01-02" }}">
+    {{ $page.Date.Format "2006-01-02" }}
+  </time>
+  <span class="font-mono text-[10px] uppercase tracking-wider w-14 shrink-0 text-{{ $accent }}">{{ $kind }}</span>
+  <span class="flex-1 min-w-0 text-sm font-medium truncate group-hover:text-brand transition-colors">{{ $page.Title }}</span>
+  {{ with $page.Params.summary }}
+    <span class="hidden md:inline text-xs text-muted-foreground truncate max-w-[40%]">{{ . }}</span>
+  {{ end }}
+  <span class="font-mono text-muted-foreground/40 text-xs shrink-0">→</span>
+</a>

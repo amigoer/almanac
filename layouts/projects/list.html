@@ -1,0 +1,30 @@
+{{ define "main" }}
+{{- $pages := .Pages -}}
+{{- $active := where $pages "Params.status" "active" -}}
+{{- $maint := where $pages "Params.status" "maintained" -}}
+{{- $exp := where $pages "Params.status" "experimental" -}}
+{{- $arch := where $pages "Params.status" "archived" -}}
+{{- $other := where (where (where (where $pages "Params.status" "!=" "active") "Params.status" "!=" "maintained") "Params.status" "!=" "experimental") "Params.status" "!=" "archived" -}}
+
+<div class="mx-auto max-w-3xl px-4 md:px-8 py-10 space-y-10">
+  <header class="space-y-2 pb-6 border-b border-border">
+    <h1 class="text-3xl font-bold tracking-tight">{{ .Title }}</h1>
+    {{ with .Description }}<p class="text-base text-muted-foreground">{{ . }}</p>{{ end }}
+    {{ with .Content }}<div class="prose-amigoer">{{ . }}</div>{{ end }}
+    <div class="text-xs text-muted-foreground/70">{{ i18n "projectsCount" (dict "Count" (len $pages)) }}</div>
+  </header>
+
+  {{- range slice (dict "title" (i18n "statusActive") "items" $active "icon" "rocket") (dict "title" (i18n "statusMaintained") "items" $maint "icon" "wrench") (dict "title" (i18n "statusExperimental") "items" $exp "icon" "flask") (dict "title" (i18n "statusOther") "items" $other "icon" "folder") (dict "title" (i18n "statusArchived") "items" $arch "icon" "archive") -}}
+    {{ if .items }}
+      <section class="space-y-4">
+        <h2 class="text-sm font-semibold text-muted-foreground tracking-wider uppercase">{{ .title }} <span class="text-muted-foreground/60">· {{ len .items }}</span></h2>
+        <div class="grid gap-3 md:grid-cols-2">
+          {{ range (.items.ByDate.Reverse) }}
+            {{ partial "card-project.html" . }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+  {{- end -}}
+</div>
+{{ end }}

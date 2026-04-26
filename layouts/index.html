@@ -1,0 +1,113 @@
+{{ define "main" }}
+{{- /* 首页：刊头（含个人信息）+ 文章流（仅 posts） */ -}}
+{{- $allItems := where .Site.RegularPages "Section" "posts" -}}
+{{- $items := first 8 ($allItems.ByDate.Reverse) -}}
+
+{{- $author := .Site.Params.author | default "Amigoer" -}}
+{{- $position := .Site.Params.position | default "" -}}
+{{- $location := .Site.Params.location | default "" -}}
+{{- $statusText := .Site.Params.statusText | default "" -}}
+{{- $tagline := .Site.Params.tagline | default "" -}}
+{{- $avatar := .Site.Params.avatar | default "/resume/amigoer.png" -}}
+
+<div class="space-y-12">
+
+  <!-- 刊头：个人信息 -->
+  <section class="space-y-5 pb-2">
+    <div class="text-[11px] font-mono uppercase tracking-[0.22em] text-brand">
+      {{ i18n "homeIssue" (dict "month" (now.Format "2006.01")) }}
+    </div>
+
+    <a href="{{ "/about/" | relURL }}" class="group block space-y-5">
+      <div class="flex items-start gap-5 md:gap-6">
+        <div class="relative shrink-0">
+          <img src="{{ $avatar | relURL }}" alt="{{ $author }}"
+               class="size-16 md:size-20 rounded-full object-cover border border-border group-hover:border-brand transition-colors">
+          {{ with $statusText }}
+            <span class="absolute -bottom-0.5 -right-0.5 flex size-3.5 items-center justify-center rounded-full bg-background" title="{{ . }}">
+              <span class="relative flex size-2">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span>
+                <span class="relative inline-flex size-2 rounded-full bg-success"></span>
+              </span>
+            </span>
+          {{ end }}
+        </div>
+        <div class="min-w-0 flex-1">
+          <h1 class="text-[clamp(1.5rem,5.5vw,2.25rem)] font-bold tracking-tight leading-[1.15] whitespace-nowrap group-hover:text-brand transition-colors">
+            {{ with .Site.Params.heroTitle }}{{ . }}{{ else }}{{ i18n "heroTitleFallback" (dict "name" $author) }}{{ end }}
+          </h1>
+          {{ if or $position $location $statusText }}
+            <p class="mt-2 text-sm text-muted-foreground">
+              {{ with $position }}<span>{{ . }}</span>{{ end }}
+              {{ if and $position $location }}<span class="opacity-50 mx-1.5">·</span>{{ end }}
+              {{ with $location }}<span>{{ . }}</span>{{ end }}
+              {{ with $statusText }}
+                <span class="opacity-50 mx-1.5">·</span>
+                <span class="text-success">● {{ . }}</span>
+              {{ end }}
+            </p>
+          {{ end }}
+        </div>
+      </div>
+
+      <p class="font-serif text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
+        {{ with .Site.Params.heroSubtitle }}{{ . | safeHTML }}{{ else }}{{ i18n "heroSubtitleFallback" }}{{ end }}
+      </p>
+    </a>
+
+    {{- /* 社交 + tagline */ -}}
+    <div class="flex flex-wrap items-center gap-3 pt-1">
+      {{ range .Site.Params.socialIcons }}
+        {{- $icon := "external-link" -}}
+        {{- if eq .name "github" }}{{ $icon = "github" }}
+        {{- else if eq .name "mail" }}{{ $icon = "mail" }}
+        {{- else if eq .name "email" }}{{ $icon = "mail" }}
+        {{- else if eq .name "wechat" }}{{ $icon = "message-circle" }}
+        {{- else if eq .name "rss" }}{{ $icon = "rss" }}
+        {{- end -}}
+        <a href="{{ .url }}"
+           {{ if not (strings.HasPrefix .url "mailto:") }}target="_blank" rel="noopener"{{ end }}
+           class="inline-flex size-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground hover:bg-accent transition-colors"
+           aria-label="{{ .name }}" title="{{ .name }}">
+          {{ partial "icon.html" $icon }}
+        </a>
+      {{ end }}
+      {{ with $tagline }}
+        <span class="ml-1 font-serif italic text-sm text-muted-foreground">"{{ . }}"</span>
+      {{ end }}
+    </div>
+
+  </section>
+
+  <!-- 混合 feed -->
+  {{ if $items }}
+  <section class="space-y-4">
+    <div class="flex items-end justify-between pb-3 border-b border-border">
+      <div class="flex items-baseline gap-3">
+        <h2 class="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">{{ i18n "homeRecentPosts" }}</h2>
+        <span class="text-[10px] font-mono text-muted-foreground/60 tabular-nums">{{ len $items }} {{ i18n "posts" }}</span>
+      </div>
+      <a href="{{ "/posts/" | relURL }}" class="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors">{{ i18n "viewAll" }}</a>
+    </div>
+
+    {{- /* 卡片尺寸由 front matter `cardSize` 控制（feature/standard/compact/note）
+           未指定时：项目恒为 note；其他按"有图→standard，无图→note"自动决定 */ -}}
+    {{ range $items }}
+      {{- $kind := upper .Section -}}
+      {{- $variant := partial "pick-card.html" . -}}
+      {{- if and (eq .Section "projects") (not .Params.cardSize) -}}
+        {{ partial "card-note.html" (dict "page" . "kind" "PROJECT" "accent" "brand") }}
+      {{- else if eq $variant "feature" -}}
+        {{ partial "card-feature.html" . }}
+      {{- else if eq $variant "compact" -}}
+        {{ partial "card-compact.html" . }}
+      {{- else if eq $variant "note" -}}
+        {{ partial "card-note.html" (dict "page" . "kind" $kind "accent" "muted-foreground") }}
+      {{- else -}}
+        {{ partial "card-post.html" . }}
+      {{- end -}}
+    {{ end }}
+  </section>
+  {{ end }}
+</div>
+{{ end }}

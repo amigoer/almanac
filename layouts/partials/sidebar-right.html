@@ -1,0 +1,110 @@
+{{- /* 右栏 个人信息：avatar + 资料 + ABOUT + NOW + (文章页 TOC) */ -}}
+
+{{- $author := .Site.Params.author | default .Site.Title -}}
+{{- $tagline := .Site.Params.tagline | default "" -}}
+{{- $location := .Site.Params.location | default "" -}}
+{{- $position := .Site.Params.position | default "" -}}
+{{- $statusText := .Site.Params.statusText | default "" -}}
+{{- $avatar := .Site.Params.avatar | default "/resume/amigoer.png" -}}
+
+{{- $nowReading := first 1 (where (where .Site.RegularPages "Section" "reading") "Params.status" "reading") -}}
+{{- $nowProject := first 1 (where (where .Site.RegularPages "Section" "projects") "Params.status" "active") -}}
+{{- $nowWatching := first 1 (where (where .Site.RegularPages "Section" "watching") "Params.status" "watching") -}}
+
+<aside class="hidden lg:block w-64 shrink-0">
+  <div class="sticky top-16 flex flex-col gap-6">
+
+    {{- /* Profile 卡 */ -}}
+    <section class="rounded-lg border border-border bg-card p-5">
+      <div class="flex items-center gap-3.5">
+        <a href="{{ "/" | relURL }}" class="relative inline-block shrink-0 group">
+          <img src="{{ $avatar | relURL }}" alt="{{ $author }}"
+               class="size-14 rounded-full object-cover border border-border group-hover:border-brand transition-colors">
+          {{ with $statusText }}
+            <span class="absolute -bottom-0.5 -right-0.5 flex size-3.5 items-center justify-center rounded-full bg-card" title="{{ . }}">
+              <span class="relative flex size-2">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span>
+                <span class="relative inline-flex size-2 rounded-full bg-success"></span>
+              </span>
+            </span>
+          {{ end }}
+        </a>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-base font-semibold tracking-tight truncate">
+            <a href="{{ "/" | relURL }}" class="hover:text-brand transition-colors">{{ $author }}</a>
+          </h2>
+          {{ if or $position $location }}
+            <p class="mt-0.5 text-[12px] text-muted-foreground truncate">
+              {{ with $position }}<span>{{ . }}</span>{{ end }}
+              {{ if and $position $location }}<span class="opacity-50 mx-1">·</span>{{ end }}
+              {{ with $location }}<span>{{ . }}</span>{{ end }}
+            </p>
+          {{ end }}
+        </div>
+      </div>
+
+      {{ with $tagline }}
+        <p class="mt-3.5 text-[13px] text-muted-foreground leading-relaxed font-serif italic">{{ . }}</p>
+      {{ end }}
+
+      {{- /* 社交 */ -}}
+      <div class="mt-3.5 flex items-center gap-1">
+        {{ range .Site.Params.socialIcons }}
+          {{- $icon := "external-link" -}}
+          {{- if eq .name "github" }}{{ $icon = "github" }}
+          {{- else if eq .name "mail" }}{{ $icon = "mail" }}
+          {{- else if eq .name "email" }}{{ $icon = "mail" }}
+          {{- else if eq .name "wechat" }}{{ $icon = "message-circle" }}
+          {{- else if eq .name "rss" }}{{ $icon = "rss" }}
+          {{- end -}}
+          <a href="{{ .url }}"
+             {{ if not (strings.HasPrefix .url "mailto:") }}target="_blank" rel="noopener"{{ end }}
+             class="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+             aria-label="{{ .name }}" title="{{ .name }}">
+            {{ partial "icon.html" $icon }}
+          </a>
+        {{ end }}
+      </div>
+    </section>
+
+    {{- /* ABOUT */ -}}
+    {{ with .Site.Params.aboutShort }}
+      <section>
+        <h3 class="mb-3 text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">ABOUT</h3>
+        <p class="font-serif text-[14px] leading-relaxed text-foreground/80">{{ . | safeHTML }}</p>
+      </section>
+    {{ end }}
+
+    {{- /* NOW */ -}}
+    {{ if or $nowReading $nowProject $nowWatching }}
+      <section>
+        <h3 class="mb-3 text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">NOW</h3>
+        <div class="flex flex-col">
+          {{ range $nowProject }}
+            <a href="{{ .RelPermalink }}" class="group flex items-baseline gap-2 py-2 text-[13px] border-b border-border/60 last:border-0">
+              <span class="font-mono text-[11px] text-brand w-10 shrink-0">BUILD</span>
+              <span class="text-foreground group-hover:text-brand truncate transition-colors">{{ .Title }}</span>
+            </a>
+          {{ end }}
+          {{ range $nowReading }}
+            <a href="{{ .RelPermalink }}" class="group flex items-baseline gap-2 py-2 text-[13px] border-b border-border/60 last:border-0">
+              <span class="font-mono text-[11px] text-brand w-10 shrink-0">READ</span>
+              <span class="text-foreground group-hover:text-brand truncate transition-colors">{{ .Title }}</span>
+            </a>
+          {{ end }}
+          {{ range $nowWatching }}
+            <a href="{{ .RelPermalink }}" class="group flex items-baseline gap-2 py-2 text-[13px] border-b border-border/60 last:border-0">
+              <span class="font-mono text-[11px] text-brand w-10 shrink-0">WATCH</span>
+              <span class="text-foreground group-hover:text-brand truncate transition-colors">{{ .Title }}</span>
+            </a>
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{- /* 文章页：TOC */ -}}
+    {{ if .IsPage }}
+      {{ partial "widget-toc.html" . }}
+    {{ end }}
+  </div>
+</aside>

@@ -1,0 +1,45 @@
+{{ define "main" }}
+{{- $isTags := eq .Data.Plural "tags" -}}
+{{- $isCats := eq .Data.Plural "categories" -}}
+{{- $maxCount := 0 -}}
+{{- range .Data.Terms.ByCount -}}
+  {{- if gt .Count $maxCount -}}{{ $maxCount = .Count }}{{- end -}}
+{{- end -}}
+
+<div class="mx-auto max-w-3xl px-4 md:px-8 py-10 space-y-8">
+  <header class="space-y-2 pb-6 border-b border-border">
+    <h1 class="text-3xl font-bold tracking-tight">{{ .Title }}</h1>
+    {{ with .Description }}<p class="text-base text-muted-foreground">{{ . }}</p>{{ end }}
+    <div class="text-xs text-muted-foreground/70">{{ len .Data.Terms }} {{ if $isTags }}个标签{{ else }}个分类{{ end }}</div>
+  </header>
+
+  {{ if $isTags }}
+    {{- /* 标签云：字号按 count 缩放 */ -}}
+    <div class="flex flex-wrap gap-2">
+      {{ range .Data.Terms.Alphabetical }}
+        {{- $weight := div (mul .Count 1.0) $maxCount -}}
+        {{- $size := add 0.85 (mul $weight 0.55) -}}
+        <a href="{{ .Page.RelPermalink }}"
+           class="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1 text-muted-foreground hover:border-brand hover:text-brand hover:bg-brand/5 transition-colors"
+           style="font-size: {{ printf "%.2frem" $size }}">
+          <span>#{{ .Page.Title }}</span>
+          <span class="text-[10px] text-muted-foreground/60">{{ .Count }}</span>
+        </a>
+      {{ end }}
+    </div>
+  {{ else }}
+    {{- /* 分类列表：每个分类一行 */ -}}
+    <div class="grid gap-2">
+      {{ range .Data.Terms.ByCount }}
+        <a href="{{ .Page.RelPermalink }}" class="group flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-4 hover:border-foreground/20 transition-colors">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="size-1.5 rounded-full bg-brand shrink-0"></span>
+            <span class="font-medium group-hover:text-brand transition-colors truncate">{{ .Page.Title }}</span>
+          </div>
+          <span class="text-xs text-muted-foreground shrink-0">{{ .Count }} 篇</span>
+        </a>
+      {{ end }}
+    </div>
+  {{ end }}
+</div>
+{{ end }}

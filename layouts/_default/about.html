@@ -1,0 +1,57 @@
+{{ define "main" }}
+<div class="mx-auto max-w-2xl px-4 md:px-8 py-10 md:py-14 space-y-8">
+  <header class="flex items-center gap-5 pb-8 border-b border-border">
+    {{ with .Site.Params.avatar }}
+      <div class="relative shrink-0">
+        <img src="{{ . }}" alt="{{ $.Site.Params.author | default $.Site.Title }}" class="size-20 md:size-24 rounded-full ring-2 ring-border object-cover">
+        {{ with $.Site.Params.statusText }}
+          <span class="absolute -bottom-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-background" title="{{ . }}">
+            <span class="relative flex size-2.5">
+              <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span>
+              <span class="relative inline-flex size-2.5 rounded-full bg-success"></span>
+            </span>
+          </span>
+        {{ end }}
+      </div>
+    {{ end }}
+    <div class="min-w-0 flex-1 space-y-1">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight">{{ .Site.Params.author | default .Site.Title }}</h1>
+      <p class="text-sm text-muted-foreground">
+        {{ with .Site.Params.position }}{{ . }}{{ end }}
+        {{ with .Site.Params.location }} · {{ . }}{{ end }}
+        {{ with .Site.Params.statusText }}
+          <span class="opacity-50 mx-1">·</span>
+          <span class="text-success">● {{ . }}</span>
+        {{ end }}
+      </p>
+    </div>
+  </header>
+
+  <div class="prose-amigoer">
+    {{ .Content }}
+  </div>
+
+  {{ if .Site.Params.socialIcons }}
+    <section class="pt-6 border-t border-border space-y-3">
+      <h2 class="text-xs font-semibold tracking-wider uppercase text-muted-foreground">联系方式</h2>
+      <div class="flex flex-wrap gap-2">
+        {{ range .Site.Params.socialIcons }}
+          {{- $name := .name | default "link" -}}
+          {{- $iconMap := dict "github" "github" "mail" "mail" "email" "mail" "rss" "rss" "twitter" "twitter" "linkedin" "linkedin" "wechat" "message-circle" -}}
+          {{- $icon := index $iconMap $name | default "link" -}}
+          {{- $label := .label | default $name -}}
+          <a href="{{ .url }}" {{ if not (or (hasPrefix .url "/") (hasPrefix .url "mailto:")) }}target="_blank" rel="noopener"{{ end }}
+             class="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm hover:border-foreground/20 hover:bg-accent transition-colors">
+            {{ partial "icon.html" (dict "name" $icon "class" "size-4 text-muted-foreground") }}
+            <span class="capitalize">{{ $label }}</span>
+          </a>
+        {{ end }}
+        <a href="{{ "/resume/" | relURL }}" class="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm hover:border-foreground/20 hover:bg-accent transition-colors">
+          {{ partial "icon.html" (dict "name" "id-card" "class" "size-4 text-muted-foreground") }}
+          <span>简历</span>
+        </a>
+      </div>
+    </section>
+  {{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,29 @@
+{{- /* Vercel 风格项目卡 */ -}}
+{{- $statusLabel := .Params.status | default "active" -}}
+{{- $statusText := i18n "statusActive" -}}
+{{- $statusDot := "bg-success" -}}
+{{- if eq $statusLabel "maintained" }}{{ $statusText = i18n "statusMaintained" }}{{ $statusDot = "bg-foreground" }}
+{{- else if eq $statusLabel "archived" }}{{ $statusText = i18n "statusArchived" }}{{ $statusDot = "bg-muted-foreground" }}
+{{- else if eq $statusLabel "experimental" }}{{ $statusText = i18n "statusExperimental" }}{{ $statusDot = "bg-warning" }}
+{{- end -}}
+<article class="group relative rounded-md border border-border p-5 transition-colors hover:border-foreground/40">
+  <div class="flex items-start justify-between gap-3 mb-2">
+    <h3 class="text-base font-semibold tracking-tight">
+      <a href="{{ .RelPermalink }}" class="before:absolute before:inset-0">{{ .Title }}</a>
+    </h3>
+    <span class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+      <span class="size-1.5 rounded-full {{ $statusDot }}"></span>
+      {{ $statusText }}
+    </span>
+  </div>
+  {{ with .Params.summary }}
+    <p class="text-sm text-muted-foreground leading-relaxed mb-3">{{ . }}</p>
+  {{ end }}
+  {{ with .Params.tech }}
+    <div class="flex flex-wrap gap-1.5">
+      {{ range . }}
+        <span class="inline-flex items-center rounded border border-border px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">{{ . }}</span>
+      {{ end }}
+    </div>
+  {{ end }}
+</article>

@@ -1,0 +1,30 @@
+{{- /* 书籍卡片：封面 + 标题 + 评分 */ -}}
+{{- $rating := .Params.rating | default 0 -}}
+<a href="{{ .RelPermalink }}" class="group block">
+  <div class="aspect-[2/3] overflow-hidden rounded-md border border-border bg-muted transition-colors group-hover:border-foreground/40">
+    {{ with .Params.cover }}
+      <img src="{{ . }}" alt="{{ $.Title }}" class="size-full object-cover" loading="lazy">
+    {{ else }}
+      <div class="flex size-full items-center justify-center text-muted-foreground/30">
+        {{ partial "icon.html" (dict "name" "book-open" "class" "size-8") }}
+      </div>
+    {{ end }}
+  </div>
+  <div class="mt-2.5 px-0.5">
+    <h4 class="line-clamp-1 text-sm font-medium group-hover:underline underline-offset-2">{{ .Title }}</h4>
+    {{ with .Params.author }}
+      <p class="line-clamp-1 text-xs text-muted-foreground mt-0.5">{{ . }}</p>
+    {{ end }}
+    {{ if $rating }}
+      <div class="flex items-center gap-0.5 mt-1">
+        {{ range seq 5 }}
+          {{ if le . (int $rating) }}
+            <span class="text-amber-500">{{ partial "icon.html" (dict "name" "star" "class" "size-3 fill-current") }}</span>
+          {{ else }}
+            <span class="text-muted-foreground/30">{{ partial "icon.html" (dict "name" "star" "class" "size-3") }}</span>
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</a>

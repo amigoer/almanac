@@ -1,0 +1,17 @@
+{{- /* 标签云 widget — Vercel 风格 */ -}}
+{{- $tags := .Site.Taxonomies.tags -}}
+{{ if $tags }}
+<section>
+  <h3 class="mb-2.5 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">TAGS</h3>
+  <div class="flex flex-wrap gap-1.5">
+    {{ range $name, $taxonomy := $tags }}
+      {{- $count := len $taxonomy.Pages -}}
+      <a href="{{ "/tags/" | relURL }}{{ $name | urlize }}/"
+         class="inline-flex items-center gap-1 rounded border border-border px-2 py-0.5 text-[11px] text-muted-foreground hover:border-foreground hover:text-foreground transition-colors">
+        <span>{{ $name }}</span>
+        <span class="font-mono text-[9px] opacity-50 tabular-nums">{{ $count }}</span>
+      </a>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

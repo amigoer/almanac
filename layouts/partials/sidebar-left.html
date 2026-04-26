@@ -1,0 +1,12 @@
+{{- /* 左栏：站主标识 + 导航 + 社交版权 */ -}}
+<aside class="hidden lg:flex w-56 shrink-0 flex-col">
+  <div class="sticky top-20 flex flex-col">
+    {{ partial "sidebar-left-profile.html" . }}
+    <div class="mt-1">
+      {{ partial "sidebar-left-widgets.html" . }}
+    </div>
+    <div class="mt-2">
+      {{ partial "sidebar-left-footer.html" . }}
+    </div>
+  </div>
+</aside>

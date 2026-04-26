@@ -1,0 +1,79 @@
+{{ define "main" }}
+{{- $sections := slice "posts" "travel" -}}
+{{- $pages := where .Site.RegularPages "Section" "in" $sections -}}
+{{- $pages = first 30 $pages.ByDate.Reverse -}}
+{{- $rssURL := "/index.xml" | relURL -}}
+
+<div class="space-y-10">
+
+  <!-- 顶栏 -->
+  <section class="space-y-3 pb-2">
+    <div class="text-[11px] font-mono uppercase tracking-[0.22em] text-brand">
+      {{ i18n "feedLabel" }}
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold tracking-tight leading-[1.1]">
+      {{ i18n "feedTitlePrefix" }}{{ .Site.Title }}
+    </h1>
+    <p class="font-serif text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
+      {{ i18n "feedSubtitlePre" }}<span class="font-mono text-foreground">NetNewsWire</span> / <span class="font-mono text-foreground">Reeder</span> / <span class="font-mono text-foreground">Inoreader</span>{{ i18n "feedSubtitlePost" }}
+    </p>
+  </section>
+
+  <!-- 订阅地址卡 -->
+  <section class="rounded-lg border border-border bg-card p-5">
+    <div class="text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-2">{{ i18n "feedUrl" }}</div>
+    <div class="flex items-center gap-2 flex-wrap">
+      <code class="flex-1 min-w-0 font-mono text-[13px] text-foreground bg-background border border-border rounded px-3 py-2 break-all" id="feed-url">{{ $rssURL | absURL }}</code>
+      <button type="button" data-copied-label="{{ i18n "copied" }}" data-default-label="{{ i18n "copy" }}"
+              class="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-background hover:border-foreground/30 hover:bg-accent text-xs font-mono text-foreground transition-colors"
+              onclick="navigator.clipboard.writeText(document.getElementById('feed-url').textContent).then(() => { const def = this.dataset.defaultLabel; this.textContent = this.dataset.copiedLabel; setTimeout(() => this.innerHTML = '<span>' + def + '</span>', 1500); })">
+        <span>{{ i18n "copy" }}</span>
+      </button>
+      <a href="{{ $rssURL }}" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-background hover:border-foreground/30 hover:bg-accent text-xs font-mono text-foreground transition-colors">
+        {{ i18n "feedViewRaw" }}
+      </a>
+    </div>
+  </section>
+
+  <!-- 最新文章 -->
+  <section class="space-y-3">
+    <div class="flex items-end justify-between pb-3 border-b border-border">
+      <div class="flex items-baseline gap-3">
+        <h2 class="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">{{ i18n "feedLatestPosts" }}</h2>
+        <span class="text-[10px] font-mono text-muted-foreground/60 tabular-nums">{{ len $pages }} {{ i18n "items" }}</span>
+      </div>
+    </div>
+
+    {{ range $pages }}
+      <article class="group rounded-lg border border-border bg-card hover:border-foreground/30 hover:bg-accent/40 transition-colors">
+        <a href="{{ .RelPermalink }}" class="block p-5">
+          <div class="flex items-center gap-2 mb-1.5 text-[11px] font-mono text-muted-foreground">
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+            <span class="opacity-40">·</span>
+            <span class="uppercase tracking-wider">{{ .Section }}</span>
+            {{ with .ReadingTime }}
+              <span class="opacity-40">·</span>
+              <span>{{ i18n "readingTime" (dict "Count" .) }}</span>
+            {{ end }}
+          </div>
+          <h3 class="text-base font-semibold tracking-tight leading-snug line-clamp-2 group-hover:text-brand transition-colors">
+            {{ .Title }}
+          </h3>
+          <p class="mt-1.5 font-serif text-[14px] text-muted-foreground line-clamp-2 leading-relaxed">
+            {{ .Summary | plainify | truncate 160 }}
+          </p>
+          {{ with .Params.tags }}
+            <div class="mt-3 flex flex-wrap gap-2 text-[10px] font-mono text-muted-foreground/70">
+              {{ range first 5 . }}
+                <span>#{{ . }}</span>
+              {{ end }}
+            </div>
+          {{ end }}
+        </a>
+      </article>
+    {{ end }}
+  </section>
+
+</div>
+{{ end }}

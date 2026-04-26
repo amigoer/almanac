@@ -1,0 +1,22 @@
+{{- /* Waline 评论：需要在 hugo.toml 配置 [params.waline] serverURL */ -}}
+{{ with .Site.Params.waline }}
+  {{ if .serverURL }}
+    <section class="mt-10 pt-8 border-t border-border">
+      <h2 class="mb-4 text-lg font-semibold tracking-tight">{{ i18n "comments" }}</h2>
+      <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css">
+      <div id="waline" class="waline-amigoer"></div>
+      <script type="module">
+        import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+        init({
+          el: '#waline',
+          serverURL: {{ .serverURL | jsonify }},
+          path: window.location.pathname,
+          dark: 'html.dark',
+          lang: {{ .lang | default "zh-CN" | jsonify }},
+          {{ with .emoji }}emoji: {{ . | jsonify }},{{ end }}
+          reaction: {{ .reaction | default false }},
+        });
+      </script>
+    </section>
+  {{ end }}
+{{ end }}

@@ -1,0 +1,39 @@
+{{ define "main" }}
+{{- $pages := .Pages -}}
+{{- $watching := where $pages "Params.status" "watching" -}}
+{{- $watched := where $pages "Params.status" "watched" -}}
+{{- $wishlist := where $pages "Params.status" "wishlist" -}}
+{{- $abandoned := where $pages "Params.status" "abandoned" -}}
+
+<div x-data="{ tab: 'all' }" class="mx-auto max-w-4xl px-4 md:px-8 py-10 space-y-8">
+  <header class="space-y-2 pb-6 border-b border-border">
+    <h1 class="text-3xl font-bold tracking-tight">{{ .Title }}</h1>
+    {{ with .Description }}<p class="text-base text-muted-foreground">{{ . }}</p>{{ end }}
+    {{ with .Content }}<div class="prose-amigoer">{{ . }}</div>{{ end }}
+    <div class="text-xs text-muted-foreground/70">{{ i18n "movieCount" (dict "Count" (len $pages)) }}</div>
+  </header>
+
+  <div class="flex flex-wrap gap-1 border-b border-border -mb-px">
+    {{- range slice (dict "key" "all" "label" (i18n "statusAll") "n" (len $pages)) (dict "key" "watching" "label" (i18n "statusWatching") "n" (len $watching)) (dict "key" "watched" "label" (i18n "statusWatched") "n" (len $watched)) (dict "key" "wishlist" "label" (i18n "statusMovieWishlist") "n" (len $wishlist)) (dict "key" "abandoned" "label" (i18n "statusMovieAbandoned") "n" (len $abandoned)) -}}
+      {{ if gt .n 0 }}
+        <button @click="tab = '{{ .key }}'"
+                :class="tab === '{{ .key }}' ? 'border-brand text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'"
+                class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium border-b-2 transition-colors">
+          {{ .label }}
+          <span class="text-xs text-muted-foreground/70">{{ .n }}</span>
+        </button>
+      {{ end }}
+    {{- end -}}
+  </div>
+
+  {{- range slice (dict "key" "all" "items" $pages) (dict "key" "watching" "items" $watching) (dict "key" "watched" "items" $watched) (dict "key" "wishlist" "items" $wishlist) (dict "key" "abandoned" "items" $abandoned) -}}
+    {{ if .items }}
+      <div x-show="tab === '{{ .key }}'" x-cloak class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 md:gap-5">
+        {{ range (.items.ByDate.Reverse) }}
+          {{ partial "card-movie.html" . }}
+        {{ end }}
+      </div>
+    {{ end }}
+  {{- end -}}
+</div>
+{{ end }}

@@ -1,0 +1,42 @@
+{{ define "main" }}
+{{- $sections := slice "posts" "travel" -}}
+{{- $allPosts := where .Site.RegularPages "Section" "in" $sections -}}
+{{- $totalCount := len $allPosts -}}
+{{- $byYear := $allPosts.GroupByDate "2006" -}}
+
+<div class="mx-auto max-w-3xl px-4 md:px-8 py-10 space-y-10">
+  <header class="space-y-2 pb-6 border-b border-border">
+    <h1 class="text-3xl font-bold tracking-tight">{{ .Title | default (i18n "archivesTitle") }}</h1>
+    <p class="text-sm text-muted-foreground">{{ i18n "archivesSubtitle" (dict "Count" $totalCount) }}</p>
+  </header>
+
+  <div class="space-y-12">
+    {{ range $byYear }}
+      <section class="relative">
+        <div class="sticky top-16 z-10 bg-background pb-2 mb-4">
+          <div class="flex items-baseline gap-3">
+            <h2 class="text-2xl font-bold tracking-tight font-mono">{{ .Key }}</h2>
+            <span class="text-xs text-muted-foreground">{{ i18n "archivesYearCount" (dict "Count" (len .Pages)) }}</span>
+          </div>
+        </div>
+        <ul class="space-y-1 border-l border-border pl-4 ml-1">
+          {{ range .Pages.ByDate.Reverse }}
+            <li class="group relative">
+              <span class="absolute -left-[21px] top-2.5 size-2 rounded-full bg-border group-hover:bg-brand transition-colors"></span>
+              <a href="{{ .RelPermalink }}" class="flex items-baseline gap-4 py-1.5 px-2 -mx-2 rounded-md hover:bg-accent/40 transition-colors">
+                <time datetime="{{ .Date.Format "2006-01-02" }}" class="text-xs text-muted-foreground font-mono shrink-0 tabular-nums">{{ .Date.Format "01-02" }}</time>
+                <span class="text-sm flex-1 group-hover:text-brand transition-colors line-clamp-1">{{ .Title }}</span>
+                {{ with .Params.categories }}
+                  {{ range first 1 . }}
+                    <span class="text-[10px] text-muted-foreground/60 hidden sm:inline shrink-0">{{ . }}</span>
+                  {{ end }}
+                {{ end }}
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </section>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

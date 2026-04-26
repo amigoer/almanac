@@ -1,0 +1,17 @@
+{{- /* 共享 nav 项：用于顶 nav 与移动抽屉 */ -}}
+{{- $current := .RelPermalink -}}
+{{- $sections := slice
+  (dict "url" "/posts/" "name" (i18n "navPosts") "section" "posts")
+  (dict "url" "/projects/" "name" (i18n "navProjects") "section" "projects")
+  (dict "url" "/reading/" "name" (i18n "navReading") "section" "reading")
+  (dict "url" "/watching/" "name" (i18n "navWatching") "section" "watching")
+  (dict "url" "/travel/" "name" (i18n "navTravel") "section" "travel")
+  (dict "url" "/about/" "name" (i18n "navAbout") "section" "about")
+-}}
+{{- range $sections -}}
+  {{- $isActive := strings.HasPrefix $current .url -}}
+  <a href="{{ .url | relURL }}"
+     class="text-sm transition-colors {{ if $isActive }}text-foreground font-medium{{ else }}text-muted-foreground hover:text-foreground{{ end }}">
+    {{ .name }}
+  </a>
+{{- end -}}

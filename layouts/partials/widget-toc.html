@@ -1,0 +1,29 @@
+{{- /* 文章 TOC widget：scroll-spy 高亮 */ -}}
+{{ if and .TableOfContents (gt (len .TableOfContents) 50) }}
+<section x-data="tocSpy">
+  <h3 class="mb-2.5 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">CONTENTS</h3>
+  <nav class="toc text-sm leading-relaxed">
+    {{ .TableOfContents }}
+  </nav>
+  <button @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+          class="mt-4 inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors">
+    ↑ TOP
+  </button>
+</section>
+
+<style>
+  .toc ul { list-style: none; padding-left: 0; margin: 0; }
+  .toc li { margin: 0; }
+  .toc ul ul { padding-left: 0.85rem; border-left: 1px solid hsl(var(--border)); margin-left: 0.4rem; }
+  .toc a {
+    display: block;
+    padding: 0.25rem 0.6rem;
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+    border-radius: 0.25rem;
+    transition: color 0.15s, background 0.15s;
+    font-size: 0.8rem;
+  }
+  .toc a:hover { color: hsl(var(--foreground)); background: hsl(var(--accent) / 0.5); }
+</style>
+{{ end }}

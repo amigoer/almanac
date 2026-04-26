@@ -1,0 +1,74 @@
+{{ define "main" }}
+{{- $books := where .Site.RegularPages "Section" "reading" -}}
+{{- $movies := where .Site.RegularPages "Section" "watching" -}}
+{{- $bookCount := len $books -}}
+{{- $movieCount := len $movies -}}
+
+<div x-data="{ tab: 'books' }" class="space-y-8">
+
+  <!-- 顶栏 -->
+  <section class="space-y-3 pb-2">
+    <div class="text-[11px] font-mono uppercase tracking-[0.22em] text-brand">
+      {{ i18n "doubanLabel" }}
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold tracking-tight leading-[1.1]">
+      {{ i18n "doubanTitle" }}
+    </h1>
+    {{ with .Description }}
+      <p class="font-serif text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">{{ . }}</p>
+    {{ end }}
+  </section>
+
+  {{- /* Tabs + 内容打包进一个 wrapper，避免 space-y-8 给 books-div 加 mb 而 movies-div 不加 */ -}}
+  <div>
+    <!-- Tabs -->
+    <div class="flex flex-wrap items-center gap-1 border-b border-border">
+      {{- range slice
+        (dict "key" "books"  "label" (i18n "doubanTabBooks")  "icon" "book-open" "n" $bookCount)
+        (dict "key" "movies" "label" (i18n "doubanTabMovies") "icon" "film"      "n" $movieCount)
+      -}}
+        <button @click="tab = '{{ .key }}'"
+                :class="tab === '{{ .key }}' ? 'border-brand text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'"
+                class="inline-flex items-center gap-2 px-4 py-2.5 text-[14px] font-medium border-b-2 -mb-px transition-colors">
+          {{ partial "icon.html" (dict "name" .icon "class" "size-4") }}
+          <span>{{ .label }}</span>
+          <span class="text-[11px] font-mono text-muted-foreground/60 tabular-nums">{{ .n }}</span>
+        </button>
+      {{- end -}}
+    </div>
+
+    {{- /* 书 */ -}}
+    <div x-show="tab === 'books'" x-cloak class="pt-6">
+      {{ if eq $bookCount 0 }}
+        <div class="rounded-lg border border-dashed border-border/70 bg-background p-10 text-center">
+          <div class="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-2">{{ i18n "empty" }}</div>
+          <p class="text-sm text-muted-foreground">{{ i18n "doubanNoBooks" }}</p>
+        </div>
+      {{ else }}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
+          {{ range $books.ByDate.Reverse }}
+            {{ partial "card-book.html" . }}
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+
+    {{- /* 影 */ -}}
+    <div x-show="tab === 'movies'" x-cloak class="pt-6">
+      {{ if eq $movieCount 0 }}
+        <div class="rounded-lg border border-dashed border-border/70 bg-background p-10 text-center">
+          <div class="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-2">{{ i18n "empty" }}</div>
+          <p class="text-sm text-muted-foreground">{{ i18n "doubanNoMovies" }}</p>
+        </div>
+      {{ else }}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
+          {{ range $movies.ByDate.Reverse }}
+            {{ partial "card-movie.html" . }}
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+
+</div>
+{{ end }}
