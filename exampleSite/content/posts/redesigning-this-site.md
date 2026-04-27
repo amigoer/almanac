@@ -2,7 +2,8 @@
 title: "从 Cairn 到 Almanac：重新设计了这个站点"
 date: 2026-04-27
 summary: "把整个主题改名重做了一遍 —— 起一个更像「年鉴」的名字，配一套自己的品牌资产，挑一张雪山做 banner。"
-cover: "/images/banner.webp"
+cover: "/images/readme-banner.svg"
+coverFit: "contain"
 tags: ["设计", "杂谈"]
 categories: ["随笔"]
 cardSize: "feature"
