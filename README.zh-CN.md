@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/readme-banner.svg" alt="Almanac" width="100%" />
+  <img src="https://raw.githubusercontent.com/amigoer/almanac/main/images/readme-banner.svg" alt="Almanac" width="100%" />
 </p>
 
 > 极简、内容向的 Hugo 个人站点主题。

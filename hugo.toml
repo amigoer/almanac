@@ -1,0 +1,12 @@
+# Hugo Module configuration for the Almanac theme.
+#
+# This file lives at the THEME root and only declares which Hugo versions
+# the theme supports. It is NOT a site config — site users keep their own
+# hugo.toml at their project root with `theme = 'almanac'`.
+#
+# Required by https://github.com/gohugoio/hugoThemesSiteBuilder.
+
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.128.0"
