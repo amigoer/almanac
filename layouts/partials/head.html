@@ -113,5 +113,14 @@
 {{- /* Alpine.js（CDN）*/ -}}
 <script defer src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js"></script>
 
-{{- /* favicon */ -}}
-<link rel="icon" href="/favicon.ico">
+{{- /* Favicon / app icons —— 默认指向 theme 的 static/，可通过 [params.icons] 整套覆盖 */ -}}
+{{- $icons := .Site.Params.icons -}}
+{{- $favicon := default "favicon.svg" (index $icons "favicon") -}}
+{{- $faviconIco := default "favicon.ico" (index $icons "faviconIco") -}}
+{{- $appleTouch := default "apple-touch-icon.svg" (index $icons "appleTouchIcon") -}}
+{{- $maskIcon := default "safari-pinned-tab.svg" (index $icons "maskIcon") -}}
+{{- $maskColor := default "#c0764e" (index $icons "maskIconColor") -}}
+<link rel="icon" type="image/svg+xml" href="{{ $favicon | relURL }}">
+<link rel="icon" type="image/x-icon" href="{{ $faviconIco | relURL }}" sizes="32x32">
+<link rel="apple-touch-icon" href="{{ $appleTouch | relURL }}">
+<link rel="mask-icon" href="{{ $maskIcon | relURL }}" color="{{ $maskColor }}">

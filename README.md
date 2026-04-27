@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="./images/favicon.svg" alt="Almanac" width="72" />
+  <img src="./images/readme-banner.svg" alt="Almanac" width="100%" />
 </p>
-
-# Almanac
 
 > A minimal, content-rich personal hub theme for Hugo.
 > Magazine-style hero · mixed feed · books / movies / projects shelves · friend links · search · dark mode.
 
-[简体中文](./README.zh-CN.md) · English
+<p align="center">
+  <a href="./README.zh-CN.md">简体中文</a> · <strong>English</strong>
+</p>
 
 An *almanac* is a yearly book — a record of dates, observations and small markers of the year past. This theme aims to be the same: a place to leave traces of what you read, watch, build and write.
 
@@ -166,6 +166,45 @@ Brand color and surfaces are controlled by CSS variables defined in `assets/css/
 ### Tailwind utilities not auto-detected
 
 Almanac uses `@source inline()` to ensure data-driven utilities (e.g. dynamic `grid-cols-*`) are always generated, since Tailwind v4 only emits classes it can find in templates. Extend the inline list in `assets/css/main.css` if you add new dynamic utilities.
+
+### Brand assets
+
+The theme ships a set of SVG brand assets — drop-in defaults that your site can override.
+
+| File                                  | Where it lives                  | Purpose                                                                 |
+| ------------------------------------- | ------------------------------- | ----------------------------------------------------------------------- |
+| `static/favicon.svg`                  | served at `/favicon.svg`        | Main favicon · `currentColor`, auto-adapts to light/dark                |
+| `static/apple-touch-icon.svg`         | served at `/apple-touch-icon.svg` | 180×180 iOS home-screen icon (terracotta tile)                        |
+| `static/safari-pinned-tab.svg`        | served at `/safari-pinned-tab.svg` | Safari pinned-tab mask icon · single-color                            |
+| `static/og-image.svg`                 | served at `/og-image.svg`       | 1200×630 social card · convert to PNG and set `params.ogImage`          |
+| `assets/icons/almanac.svg`            | Hugo Pipes resource             | Inline footer mark (small)                                              |
+| `assets/icons/logo-horizontal.svg`    | Hugo Pipes resource             | 240×60 horizontal logo · navigation / inline brand                      |
+| `assets/icons/logo-stacked.svg`       | Hugo Pipes resource             | 200×140 stacked logo · hero / about                                     |
+| `assets/icons/wordmark.svg`           | Hugo Pipes resource             | Pure text wordmark                                                      |
+| `images/readme-banner.svg`            | repo only                       | 1280×400 GitHub README banner                                           |
+
+Favicon, apple-touch and pinned-tab links are wired in `layouts/partials/head.html`. Two ways to override:
+
+1. **Drop in a file with the same name** under your site's `static/` — Hugo prefers project-level files over theme-level ones.
+2. **Repoint via `hugo.toml`** if your file lives at a different path:
+
+```toml
+[params.icons]
+  favicon        = "/favicon.svg"            # SVG · currentColor, auto light/dark
+  faviconIco     = "/favicon.ico"            # legacy ICO fallback
+  appleTouchIcon = "/apple-touch-icon.svg"   # iOS home screen
+  maskIcon       = "/safari-pinned-tab.svg"  # Safari pinned tab (single-color)
+  maskIconColor  = "#c0764e"                 # mask-icon fill colour
+```
+
+Each key is optional — omit any to keep the theme default.
+
+For Open Graph: convert `static/og-image.svg` to PNG (e.g. via [realfavicongenerator.net](https://realfavicongenerator.net/) or `rsvg-convert`) and set:
+
+```toml
+[params]
+  ogImage = "/og-image.png"
+```
 
 ## Search
 

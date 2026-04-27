@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 140" fill="currentColor" aria-hidden="true">
+  <g transform="translate(80 14) scale(1.25)">
+    <rect x="3" y="4" width="11" height="24" rx="1.5"/>
+    <rect x="18" y="4" width="11" height="24" rx="1.5"/>
+  </g>
+  <text x="100" y="120" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="32" font-weight="600" letter-spacing="-0.025em">Almanac</text>
+</svg>

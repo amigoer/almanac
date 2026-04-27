@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="./images/favicon.svg" alt="Almanac" width="72" />
+  <img src="./images/readme-banner.svg" alt="Almanac" width="100%" />
 </p>
-
-# Almanac
 
 > 极简、内容向的 Hugo 个人站点主题。
 > 杂志风刊头 · 混合 feed · 书 / 影 / 项目 / 友链一应俱全 · 搜索 · 暗色模式。
 
-简体中文 · [English](./README.md)
+<p align="center">
+  <strong>简体中文</strong> · <a href="./README.md">English</a>
+</p>
 
 **Almanac** 在英文里是"年鉴 / 历书"——一本按年份记录天文、节气、农事和生活点滴的小册子。
 本主题想做的事差不多：在你的数字花园里留一本顺手的小书，把读 / 看 / 写 / 做按时序整齐地记录下来。
@@ -167,6 +167,45 @@ static/
 ### 数据驱动的 utility
 
 Almanac 用 Tailwind v4 的 `@source inline()` 显式声明那些"模板里出现不了、但运行时会用到"的 class（比如动态的 `grid-cols-*`）。如果你新加了类似的动态 utility，把名字添到 `assets/css/main.css` 的 `@source inline()` 列表里。
+
+### 品牌资产
+
+主题自带一整套 SVG 品牌资产，作为开箱默认值；你可以在自己的站点里覆盖。
+
+| 文件                                  | 位置                              | 用途                                                                |
+| ------------------------------------- | --------------------------------- | ------------------------------------------------------------------- |
+| `static/favicon.svg`                  | 站点根 `/favicon.svg`             | 主 favicon · `currentColor`，浅深模式自适配                         |
+| `static/apple-touch-icon.svg`         | 站点根 `/apple-touch-icon.svg`    | 180×180 iOS 主屏图标（赤陶橙底）                                    |
+| `static/safari-pinned-tab.svg`        | 站点根 `/safari-pinned-tab.svg`   | Safari 钉选标签 · 单色                                              |
+| `static/og-image.svg`                 | 站点根 `/og-image.svg`            | 1200×630 社交卡 · 建议转 PNG 后通过 `params.ogImage` 配置           |
+| `assets/icons/almanac.svg`            | Hugo Pipes 资源                   | 页脚小图标                                                          |
+| `assets/icons/logo-horizontal.svg`    | Hugo Pipes 资源                   | 240×60 横版 logo · 导航 / inline 品牌                               |
+| `assets/icons/logo-stacked.svg`       | Hugo Pipes 资源                   | 200×140 竖版 logo · hero / about                                    |
+| `assets/icons/wordmark.svg`           | Hugo Pipes 资源                   | 纯文字 wordmark                                                     |
+| `images/readme-banner.svg`            | 仅仓库                            | 1280×400 GitHub README 横幅                                         |
+
+favicon / apple-touch / pinned-tab 已经在 `layouts/partials/head.html` 里接入。两种覆盖方式：
+
+1. **同名文件覆盖** —— 把替代文件放进你自己 site 的 `static/`，Hugo 会优先用项目级的。
+2. **`hugo.toml` 改路径** —— 文件在别处时，用 `[params.icons]` 重新指：
+
+```toml
+[params.icons]
+  favicon        = "/favicon.svg"            # 主 favicon · currentColor 自适配深浅
+  faviconIco     = "/favicon.ico"            # 老浏览器 ICO 兜底
+  appleTouchIcon = "/apple-touch-icon.svg"   # iOS 主屏
+  maskIcon       = "/safari-pinned-tab.svg"  # Safari 钉选标签（单色）
+  maskIconColor  = "#c0764e"                 # mask-icon 填充色
+```
+
+每个键都可选，不写就用主题默认值。
+
+Open Graph 图：把 `static/og-image.svg` 转成 PNG（推荐 [realfavicongenerator.net](https://realfavicongenerator.net/) 或 `rsvg-convert`），然后配置：
+
+```toml
+[params]
+  ogImage = "/og-image.png"
+```
 
 ## 搜索
 
