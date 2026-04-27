@@ -21,7 +21,7 @@ pluralizeListTitles = false
   # 基础信息
   author = "Your Name"
   description = "Your tagline here — describe what this site is about."
-  avatar = "/images/avatar.png"          # 放进 static/images/ 即可
+  avatar = "/apple-touch-icon.svg"       # 默认用主题自带的品牌 icon；放进 static/images/avatar.png 即可覆盖
   bannerImage = "/images/banner.webp"    # 顶部 banner（可选）
   position = "Job Title"
   location = "City"
@@ -44,6 +44,15 @@ pluralizeListTitles = false
   # Waline 评论（部署后填写 serverURL 启用）
   [params.waline]
     serverURL = ""
+
+  # 图标 / Favicon —— 默认值已经指向主题自带 static/ 下的资源，
+  # 全部可选；若要替换，把同名文件放进自己 site 的 static/，或在这里改路径。
+  # [params.icons]
+  #   favicon        = "/favicon.svg"           # 主 favicon（SVG · currentColor 自适配深浅）
+  #   faviconIco     = "/favicon.ico"           # 老浏览器 ICO 兜底
+  #   appleTouchIcon = "/apple-touch-icon.svg"  # iOS 主屏（建议导出 PNG）
+  #   maskIcon       = "/safari-pinned-tab.svg" # Safari 钉选标签（单色）
+  #   maskIconColor  = "#c0764e"                # mask-icon 颜色
 
   # 社交
   [[params.socialIcons]]
