@@ -359,3 +359,13 @@ input[type="search"]::-webkit-search-decoration {
 .waline-amigoer .wl-meta-foot {
   display: none;
 }
+
+/* 聚焦反馈：去掉 Waline 默认的填底，textarea 改用赤陶橙细描边；
+   输入框因为挤在 dashed 分割线之间，不加 ring 以免视觉冲突。 */
+.waline-amigoer .wl-editor:focus,
+.waline-amigoer .wl-input:focus {
+  background: transparent;
+}
+.waline-amigoer .wl-editor:focus {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.35);
+}
