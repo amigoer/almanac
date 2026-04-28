@@ -9,11 +9,11 @@
         import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
         init({
           el: '#waline',
-          serverURL: {{ .serverURL | jsonify }},
+          serverURL: {{ .serverURL | jsonify | safeJS }},
           path: window.location.pathname,
           dark: 'html.dark',
-          lang: {{ .lang | default "zh-CN" | jsonify }},
-          {{ with .emoji }}emoji: {{ . | jsonify }},{{ end }}
+          lang: {{ .lang | default "zh-CN" | jsonify | safeJS }},
+          {{ with .emoji }}emoji: {{ . | jsonify | safeJS }},{{ end }}
           reaction: {{ .reaction | default false }},
         });
       </script>
