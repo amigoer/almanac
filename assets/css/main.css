@@ -325,3 +325,31 @@ input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
+
+/* ===== Waline 评论：把官方 CSS 变量绑到主题 design token =====
+   仅做默认配色与圆角的适配，自动跟随 .dark 切换；
+   站点想偏离这套默认时，请在 site 侧覆盖 .waline-amigoer 的变量。 */
+.waline-amigoer,
+.waline-amigoer [data-waline] {
+  --waline-theme-color: hsl(var(--brand));
+  --waline-active-color: hsl(var(--brand));
+
+  --waline-color: hsl(var(--foreground));
+  --waline-bg-color: hsl(var(--background));
+  --waline-bg-color-light: hsl(var(--muted));
+  --waline-bg-color-hover: hsl(var(--accent));
+
+  --waline-border-color: hsl(var(--border));
+  --waline-info-bg-color: hsl(var(--secondary));
+  --waline-info-color: hsl(var(--muted-foreground));
+  --waline-card-color: hsl(var(--card));
+
+  --waline-disable-bg-color: hsl(var(--muted));
+  --waline-disable-color: hsl(var(--muted-foreground));
+
+  --waline-code-color: hsl(var(--foreground));
+  --waline-code-bg-color: hsl(var(--muted));
+
+  --waline-control-radius: var(--radius);
+  --waline-avatar-radius: 9999px;
+}
