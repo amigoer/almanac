@@ -149,21 +149,73 @@
     [x-cloak] { display: none !important; }
     /* Pagefind UI 适配 Vercel 风格 */
     #cmdk-search .pagefind-ui__form,
-    .pagefind-search-container .pagefind-ui__form { padding: 0; }
+    .pagefind-search-container .pagefind-ui__form {
+      padding: 0;
+      position: relative;
+    }
+    /* 自绘放大镜（盖掉 Pagefind 默认背景图），跟随主题色 */
+    #cmdk-search .pagefind-ui__form::before,
+    .pagefind-search-container .pagefind-ui__form::before {
+      content: "";
+      position: absolute;
+      left: 0.95rem;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      transform: translateY(-50%);
+      background-color: hsl(var(--muted-foreground) / 0.75);
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+              mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+      -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+      -webkit-mask-position: center; mask-position: center;
+      -webkit-mask-size: contain; mask-size: contain;
+      pointer-events: none;
+      z-index: 1;
+    }
     #cmdk-search .pagefind-ui__search-input,
     .pagefind-search-container .pagefind-ui__search-input {
-      background: hsl(var(--background));
+      width: 100%;
+      background: hsl(var(--muted) / 0.5);
+      background-image: none !important;
       color: hsl(var(--foreground));
-      border: 1px solid hsl(var(--border));
-      border-radius: 6px;
-      padding: 0.55rem 0.85rem;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0.7rem 2.75rem;
       font-size: 0.95rem;
       font-family: inherit;
+      line-height: 1.4;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+    #cmdk-search .pagefind-ui__search-input::placeholder,
+    .pagefind-search-container .pagefind-ui__search-input::placeholder {
+      color: hsl(var(--muted-foreground) / 0.7);
+    }
+    #cmdk-search .pagefind-ui__search-input:hover,
+    .pagefind-search-container .pagefind-ui__search-input:hover {
+      background: hsl(var(--muted) / 0.7);
     }
     #cmdk-search .pagefind-ui__search-input:focus,
     .pagefind-search-container .pagefind-ui__search-input:focus {
       outline: none;
-      border-color: hsl(var(--foreground));
+      background: hsl(var(--background));
+      border-color: hsl(var(--foreground) / 0.25);
+      box-shadow: 0 0 0 3px hsl(var(--foreground) / 0.06);
+    }
+    #cmdk-search .pagefind-ui__search-clear,
+    .pagefind-search-container .pagefind-ui__search-clear {
+      background: transparent;
+      color: hsl(var(--muted-foreground));
+      border: none;
+      padding: 0.25rem 0.55rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    #cmdk-search .pagefind-ui__search-clear:hover,
+    .pagefind-search-container .pagefind-ui__search-clear:hover {
+      background: hsl(var(--accent));
+      color: hsl(var(--foreground));
     }
     #cmdk-search .pagefind-ui__results-area,
     .pagefind-search-container .pagefind-ui__results-area { margin-top: 0.5rem; }
