@@ -117,6 +117,7 @@
 {{- /* 文章副 nav：滚过 banner 后滑入，显示当前文章标题，点击回顶 */ -}}
 {{- if .IsPage }}
 <div x-data="{ show: false }"
+     x-cloak
      @scroll.window.throttle.16ms="show = window.scrollY > 280"
      :class="show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'"
      class="fixed top-14 inset-x-0 z-30 bg-background/90 backdrop-blur-md border-b border-border transition-all duration-200">
